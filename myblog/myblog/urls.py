@@ -22,4 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', views.index),
     path('login/', views.login),
+    path('redirection/', views.redirection),
+    path('infolist/', views.infolist),
+    path('deleteinfo/', views.deleteinfo),
 ]
