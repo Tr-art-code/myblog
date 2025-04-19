@@ -3,7 +3,8 @@ from app01.models import UserInfo
 
 # Create your views here.
 def index(request):
-    return HttpResponse("Hello World".encode('utf-8'))
+    # return HttpResponse("Hello World".encode('utf-8'))
+    return render(request, "index.html")
 
 def login(request):
     print(request.method)
