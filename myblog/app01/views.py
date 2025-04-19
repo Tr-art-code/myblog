@@ -6,6 +6,12 @@ def index(request):
     # return HttpResponse("Hello World".encode('utf-8'))
     return render(request, "index.html")
 
+def clock(request):
+    return render(request, "clock.html")
+
+def main(request):
+    return render(request, "main.html")
+
 def login(request):
     print(request.method)
     print(request.GET)

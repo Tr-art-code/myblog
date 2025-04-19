@@ -3,295 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数字时钟</title>
+    <title>我的博客 | 首页</title>
+    <!-- 引入Google字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Raleway:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Raleway', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background-color: #0a0a0a;
+        }
+        
+        .hero-container {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://source.unsplash.com/random/1920x1080/?technology,nature');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.7);
+            transition: transform 8s ease;
+            animation: slowZoom 20s infinite alternate;
+        }
+        
+        @keyframes slowZoom {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.1);
+            }
+        }
+        
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f5f5f5;
-            transition: background-color 0.3s;
-            overflow: hidden;
-            background-size: cover;
-            background-position: center;
-        }
-        
-        body.dark-mode {
-            background-color: #121212;
-            color: #ffffff;
-        }
-        
-        .clock-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .time-unit {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 500px;
-            height: 500px;
-            background-color: #000;
-            color: #fff;
-            font-size: 280px;
-            font-weight: bold;
-            margin: 0 15px;
-            border-radius: 20px;
-        }
-        
-        .am-pm-container {
             text-align: center;
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            pointer-events: none; /* 允许点击穿透 */
-            transition: bottom 0.3s ease; /* 添加过渡效果 */
+            padding: 2rem;
         }
         
-        .am-pm {
-            font-size: 60px;
-            font-weight: bold;
-            color: #ff5722;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 10px 30px;
-            border-radius: 15px;
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1.2s forwards 0.5s;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #f0f0f0;
+            max-width: 800px;
+            margin-bottom: 3rem;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1.2s forwards 0.8s;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .enter-button {
             display: inline-block;
+            padding: 1rem 2.5rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1.2s forwards 1.1s;
+            position: relative;
+            overflow: hidden;
         }
         
-        .date-container {
-            font-size: 28px;
-            margin-bottom: 20px;
+        .enter-button:hover {
+            background-color: #ffffff;
+            color: #000000;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
         
-        .controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
+        .enter-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.5s;
         }
         
-        button {
-            padding: 8px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
+        .enter-button:hover::before {
+            left: 100%;
         }
         
-        button:hover {
-            background-color: #45a049;
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .enter-button {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
         }
         
-        .fullscreen-btn.active {
-            background-color: #f44336;
-        }
-        
-        .dark-mode-btn.active {
-            background-color: #2196F3;
-        }
-        
-        .time-format-btn.h12 {
-            background-color: #9C27B0;
-        }
-        
-        .background-input {
-            display: none;
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="clock-container">
-        <div class="time-unit hours">00</div>
-        <div class="time-unit minutes">00</div>
-        <div class="time-unit seconds">00</div>
+    <div class="hero-container">
+        <div class="hero-image"></div>
+        <div class="overlay">
+            <h1 class="hero-title">探索无限可能</h1>
+            <p class="hero-subtitle">在这里，我分享我的思考、创作和发现。每一篇文章都是一次心灵旅程，每一个想法都是创新的火花。</p>
+            <a href="/main" class="enter-button">进入博客</a>
+        </div>
     </div>
-    
-    <div class="date-container" id="date-display"></div>
-    
-    <div class="controls">
-        <button class="fullscreen-btn" id="fullscreen-btn">全屏</button>
-        <button class="dark-mode-btn" id="dark-mode-btn">深色模式</button>
-        <button class="time-format-btn" id="time-format-btn">12h/24h</button>
-        <button class="bg-btn" id="bg-btn">自定义背景</button>
-        <input type="file" id="background-input" class="background-input" accept="image/*">
-    </div>
-    
-    <div class="am-pm-container">
-        <div class="am-pm" id="am-pm-display"></div>
-    </div>
-
     <script>
-        // 获取DOM元素
-        const hoursElement = document.querySelector('.hours');
-        const minutesElement = document.querySelector('.minutes');
-        const secondsElement = document.querySelector('.seconds');
-        const amPmDisplay = document.getElementById('am-pm-display');
-        const amPmContainer = document.querySelector('.am-pm-container');
-        const dateDisplay = document.getElementById('date-display');
-        const fullscreenBtn = document.getElementById('fullscreen-btn');
-        const darkModeBtn = document.getElementById('dark-mode-btn');
-        const timeFormatBtn = document.getElementById('time-format-btn');
-        const bgBtn = document.getElementById('bg-btn');
-        const backgroundInput = document.getElementById('background-input');
-        
-        // 状态变量
-        let is24HourFormat = true;
-        let isDarkMode = false;
-        
-        // 初始化隐藏上午/下午显示
-        amPmContainer.style.display = 'none';
-        
-        // 更新时钟
-        function updateClock() {
-            const now = new Date();
-            let hours = now.getHours();
-            const minutes = now.getMinutes();
-            const seconds = now.getSeconds();
-            
-            // 设置上午/下午显示
-            if (is24HourFormat) {
-                amPmContainer.style.display = 'none';
-            } else {
-                amPmContainer.style.display = 'block';
-                amPmDisplay.textContent = hours < 12 ? '上午' : '下午';
-                
-                // 12小时制转换
-                if (hours === 0) {
-                    hours = 12;
-                } else if (hours > 12) {
-                    hours = hours - 12;
-                }
-            }
-            
-            // 更新小时、分钟、秒钟（添加前导零）
-            hoursElement.textContent = hours.toString().padStart(2, '0');
-            minutesElement.textContent = minutes.toString().padStart(2, '0');
-            secondsElement.textContent = seconds.toString().padStart(2, '0');
-            
-            // 更新日期
-            const options = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            };
-            dateDisplay.textContent = now.toLocaleDateString('zh-CN', options);
-        }
-        
-        // 在script部分添加以下代码
-        
-        // 全屏切换
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    console.error(`全屏错误: ${err.message}`);
-                });
-                fullscreenBtn.textContent = '退出全屏';
-                fullscreenBtn.classList.add('active');
-                adjustAmPmPosition(true); // 调整为全屏位置
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                    fullscreenBtn.textContent = '全屏';
-                    fullscreenBtn.classList.remove('active');
-                    adjustAmPmPosition(false); // 调整为非全屏位置
-                }
-            }
-        }
-        
-        // 调整上午/下午显示位置
-        function adjustAmPmPosition(isFullscreen) {
-            if (isFullscreen) {
-                amPmContainer.style.bottom = '80px'; // 全屏时位置更高
-            } else {
-                amPmContainer.style.bottom = '20px'; // 非全屏时位置更低
-            }
-        }
-        
-        // 监听全屏变化
-        document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement) {
-                fullscreenBtn.textContent = '全屏';
-                fullscreenBtn.classList.remove('active');
-                adjustAmPmPosition(false); // 调整为非全屏位置
-            } else {
-                adjustAmPmPosition(true); // 调整为全屏位置
-            }
-        });
-        
-        // 深色模式切换
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            isDarkMode = !isDarkMode;
-            
-            if (isDarkMode) {
-                darkModeBtn.textContent = '浅色模式';
-                darkModeBtn.classList.add('active');
-            } else {
-                darkModeBtn.textContent = '深色模式';
-                darkModeBtn.classList.remove('active');
-            }
-        }
-        
-        // 时间格式切换
-        function toggleTimeFormat() {
-            is24HourFormat = !is24HourFormat;
-            
-            if (is24HourFormat) {
-                timeFormatBtn.textContent = '12h/24h';
-                timeFormatBtn.classList.remove('h12');
-            } else {
-                timeFormatBtn.textContent = '24h/12h';
-                timeFormatBtn.classList.add('h12');
-            }
-            
-            updateClock();
-        }
-        
-        // 自定义背景
-        function changeBackground() {
-            backgroundInput.click();
-        }
-        
-        // 背景图片加载
-        backgroundInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    document.body.style.backgroundImage = `url(${event.target.result})`;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-        
-        // 事件监听
-        fullscreenBtn.addEventListener('click', toggleFullscreen);
-        darkModeBtn.addEventListener('click', toggleDarkMode);
-        timeFormatBtn.addEventListener('click', toggleTimeFormat);
-        bgBtn.addEventListener('click', changeBackground);
-        
-        // 初始化时钟并设置定时器
-        updateClock();
-        setInterval(updateClock, 1000);
-        
-        // 监听全屏变化
-        document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement) {
-                fullscreenBtn.textContent = '全屏';
-                fullscreenBtn.classList.remove('active');
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            // 保留随机更换背景图片功能
+            const heroImage = document.querySelector('.hero-image');
+            const themes = ['technology', 'nature', 'architecture', 'art', 'travel'];
+            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+            heroImage.style.backgroundImage = `url('https://source.unsplash.com/random/1920x1080/?${randomTheme}')`;
         });
     </script>
 </body>
