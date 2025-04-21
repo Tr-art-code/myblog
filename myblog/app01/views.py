@@ -12,11 +12,23 @@ def clock(request):
 def main(request):
     return render(request, "main.html")
 
+def posts(request):
+    return render(request, "posts.html")
+    
+def archive(request):
+    return render(request, "archive.html")
+
+def about(request):
+    return render(request, "about.html")
+
 def login(request):
     print(request.method)
     print(request.GET)
     print(request.POST)
     return render(request, "login.html")
+
+def test(request):
+    return render(request, "test.html")
 
 def redirection(request):
     return redirect("/login/")

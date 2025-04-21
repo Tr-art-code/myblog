@@ -3,19 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的博客</title>
+    <title>技术博客 - 分享技术，探索未来</title>
+    <!-- 引入字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&family=Fira+Code&display=swap" rel="stylesheet">
+    <!-- 引入图标库 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #1A5276;
+            --light-blue: #5DADE2;
+            --white: #FFFFFF;
+            --dark-blue: #123456;
+            --neutral-gray: #F5F5F5;
+            --accent-color: #E67E22;
+            
+            --title-font: 'Montserrat', sans-serif;
+            --body-font: 'Open Sans', sans-serif;
+            --code-font: 'Fira Code', monospace;
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
         }
         
         body {
-            background-color: #0a192f;
-            color: #e6f1ff;
+            font-family: var(--body-font);
+            color: #333;
+            background-color: var(--white);
             overflow-x: hidden;
         }
         
@@ -28,246 +44,575 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.5rem 3rem;
-            background: rgba(10, 25, 47, 0.9);
-            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
             z-index: 1000;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
         }
         
-        /* Logo样式 */
+        .navbar.scrolled {
+            background-color: rgba(18, 52, 86, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
         .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logo i {
             font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-right: 0.5rem;
+        }
+        
+        .logo-text {
+            font-family: var(--title-font);
             font-weight: 700;
-            color: #64ffda;
-            text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
-            transition: all 0.3s ease;
+            font-size: 1.5rem;
+            color: var(--white);
         }
         
-        .logo:hover {
-            transform: scale(1.05);
-            text-shadow: 0 0 15px rgba(100, 255, 218, 0.8);
-        }
-        
-        /* 导航菜单样式 */
-        .nav-menu {
+        .nav-links {
             display: flex;
             list-style: none;
-            gap: 2.5rem;
         }
         
-        .nav-item {
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .nav-links li {
+            margin: 0 1rem;
         }
         
-        .nav-link {
-            color: #ccd6f6;
+        .nav-links a {
+            color: var(--white);
             text-decoration: none;
-            font-size: 1.1rem;
-            font-weight: 500;
-            letter-spacing: 1px;
+            font-family: var(--title-font);
+            font-weight: 600;
+            font-size: 1rem;
+            position: relative;
             padding: 0.5rem 0;
-            transition: all 0.3s ease;
-            text-shadow: 0 0 5px rgba(204, 214, 246, 0.3);
         }
         
-        .nav-link:hover {
-            color: #ffd700;
-            transform: scale(1.05);
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
-        }
-        
-        .nav-link.active {
-            color: #ffd700;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
-        }
-        
-        .nav-link.active::after {
+        .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: 0;
             left: 0;
-            width: 100%;
+            width: 0;
             height: 2px;
-            background: #ffd700;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
-            animation: glow 1.5s infinite alternate;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
         }
         
-        @keyframes glow {
-            from {
-                box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
-            }
-            to {
-                box-shadow: 0 0 15px rgba(255, 215, 0, 0.9);
-            }
+        .nav-links a:hover::after {
+            width: 100%;
         }
         
-        /* 搜索栏样式 */
-        .search-container {
-            position: relative;
-            margin-left: 2rem;
-        }
-        
-        .search-input {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(100, 255, 218, 0.3);
-            border-radius: 20px;
-            padding: 0.5rem 1rem 0.5rem 2.5rem;
-            color: #e6f1ff;
-            width: 200px;
-            transition: all 0.3s ease;
-        }
-        
-        .search-input:focus {
-            width: 250px;
-            background: rgba(255, 255, 255, 0.15);
-            border-color: #64ffda;
-            outline: none;
-            box-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
-        }
-        
-        .search-icon {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #ccd6f6;
-        }
-        
-        /* 右侧图标样式 */
-        .nav-icons {
+        .nav-right {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
         }
         
-        .icon-btn {
-            position: relative;
+        .theme-toggle {
             background: none;
             border: none;
-            color: #ccd6f6;
+            color: var(--white);
             font-size: 1.2rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            margin-right: 1.5rem;
         }
         
-        .icon-btn:hover {
-            color: #64ffda;
-            transform: scale(1.1);
+        .login-btn {
+            background-color: var(--accent-color);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 4px;
+            font-family: var(--title-font);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
         
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #ff6b6b;
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 0.7rem;
+        .login-btn:hover {
+            background-color: #d35400;
+        }
+        
+        /* 首页展示区样式 */
+        .hero {
+            height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 0 5px rgba(255, 107, 107, 0.7);
+            text-align: center;
+            position: relative;
+            background-color: var(--dark-blue);
+            overflow: hidden;
         }
         
-        .profile-icon {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
+        .hero-content {
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+        
+        .hero h1 {
+            font-family: var(--title-font);
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--light-blue);
+            margin-bottom: 2rem;
+        }
+        
+        .cta-btn {
+            background-color: var(--accent-color);
+            color: var(--white);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 4px;
+            font-family: var(--title-font);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .cta-btn:hover {
+            background-color: #d35400;
+            transform: translateY(-3px);
+        }
+        
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .hero-line {
+            position: absolute;
+            background-color: rgba(93, 173, 226, 0.1);
+            transition: all 0.5s ease;
+        }
+        
+        /* 文章网格样式 */
+        .articles-section {
+            padding: 5rem 5%;
+            background-color: var(--white);
+        }
+        
+        .section-title {
+            font-family: var(--title-font);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 2.5rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+        
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .article-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        
+        .article-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .article-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+        
+        .article-card:hover::after {
+            width: 100%;
+        }
+        
+        .article-img {
+            width: 100%;
+            height: 200px;
             object-fit: cover;
-            border: 2px solid #64ffda;
+        }
+        
+        .article-content {
+            padding: 1.5rem;
+        }
+        
+        .article-title {
+            font-family: var(--title-font);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+        }
+        
+        .article-excerpt {
+            color: #555;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #777;
+        }
+        
+        .article-meta i {
+            margin-right: 0.5rem;
+        }
+        
+        .article-meta span {
+            margin-right: 1rem;
+        }
+        
+        .read-more {
+            display: inline-block;
+            color: var(--accent-color);
+            font-weight: 600;
+            text-decoration: none;
+            position: relative;
+        }
+        
+        .read-more::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+        
+        .read-more:hover::after {
+            width: 100%;
+        }
+        
+        /* 特色主题区样式 */
+        .featured-topics {
+            padding: 5rem 0;
+            background-color: var(--neutral-gray);
+            overflow: hidden;
+        }
+        
+        .topics-container {
+            display: flex;
+            overflow-x: auto;
+            padding: 1rem 5%;
+            scroll-behavior: smooth;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .topics-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .topic-card {
+            flex: 0 0 300px;
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-right: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .topic-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .topic-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+        
+        .topic-card:hover::after {
+            width: 100%;
+        }
+        
+        .topic-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .topic-title {
+            font-family: var(--title-font);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+        }
+        
+        .topic-desc {
+            color: #555;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        
+        .view-more-container {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .view-more {
+            display: inline-block;
+            color: var(--primary-color);
+            font-family: var(--title-font);
+            font-weight: 600;
+            text-decoration: none;
+            padding: 0.5rem 1.5rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 4px;
             transition: all 0.3s ease;
         }
         
-        .profile-icon:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 10px rgba(100, 255, 218, 0.7);
+        .view-more:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
         }
         
-        /* 汉堡菜单 */
-        .hamburger {
-            display: none;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: #ccd6f6;
+        /* 热门标签样式 */
+        .tags-section {
+            padding: 5rem 5%;
+            background-color: var(--white);
+        }
+        
+        .tags-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            background-color: var(--neutral-gray);
+            border-radius: 30px;
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .tag::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+            border-radius: 30px;
+        }
+        
+        .tag:hover {
+            transform: translateY(-3px);
+        }
+        
+        .tag:hover::after {
+            width: 100%;
+        }
+        
+        .tag-1 { font-size: 0.9rem; }
+        .tag-2 { font-size: 1rem; }
+        .tag-3 { font-size: 1.1rem; }
+        .tag-4 { font-size: 1.2rem; }
+        .tag-5 { font-size: 1.3rem; }
+        
+        /* 页脚样式 */
+        .footer {
+            background-color: var(--dark-blue);
+            color: var(--white);
+            padding: 3rem 5%;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-logo i {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-right: 0.5rem;
+        }
+        
+        .footer-logo-text {
+            font-family: var(--title-font);
+            font-weight: 700;
             font-size: 1.5rem;
+            color: var(--white);
         }
         
-        /* 内容区域样式 */
-        .content-section {
-            min-height: 100vh;
-            padding: 7rem 3rem 3rem;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+        .footer-about p {
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
         }
         
-        .content-section.active {
-            display: block;
-            opacity: 1;
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--white);
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+        
+        .footer-title {
+            font-family: var(--title-font);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--accent-color);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .footer-contact p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-contact i {
+            margin-right: 0.8rem;
+            color: var(--accent-color);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         /* 响应式设计 */
-        @media (max-width: 992px) {
-            .navbar {
-                padding: 1rem 2rem;
+        @media (max-width: 1024px) {
+            .articles-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
             
-            .nav-menu {
-                gap: 1.5rem;
-            }
-            
-            .search-input {
-                width: 150px;
-            }
-            
-            .search-input:focus {
-                width: 200px;
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
         
         @media (max-width: 768px) {
-            .hamburger {
-                display: block;
+            .hero h1 {
+                font-size: 2.5rem;
             }
             
-            .nav-menu {
-                position: fixed;
-                top: 70px;
-                right: -100%;
-                flex-direction: column;
-                background: rgba(10, 25, 47, 0.95);
-                width: 250px;
-                height: calc(100vh - 70px);
-                padding: 2rem;
-                gap: 2rem;
-                transition: all 0.5s ease;
-                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+            .articles-grid {
+                grid-template-columns: 1fr;
             }
             
-            .nav-menu.active {
-                right: 0;
+            .footer-content {
+                grid-template-columns: 1fr;
             }
             
-            .search-container {
-                margin-left: 0;
-                margin-top: 1.5rem;
-                width: 100%;
-            }
-            
-            .search-input, .search-input:focus {
-                width: 100%;
-            }
-            
-            .content-section {
-                padding: 6rem 1.5rem 2rem;
+            .nav-links {
+                display: none;
             }
         }
     </style>
@@ -275,143 +620,283 @@
 <body>
     <!-- 导航栏 -->
     <nav class="navbar">
-        <a href="#" class="logo">MyBlog</a>
+        <a href="#" class="logo">
+            <i class="fas fa-code"></i>
+            <span class="logo-text">技术博客</span>
+        </a>
         
-        <ul class="nav-menu">
-            <li class="nav-item">
-                <a href="#home" class="nav-link active" data-section="home">首页</a>
-            </li>
-            <li class="nav-item">
-                <a href="#news" class="nav-link" data-section="news">资讯</a>
-            </li>
-            <li class="nav-item">
-                <a href="#learn" class="nav-link" data-section="learn">学习</a>
-            </li>
-            <li class="nav-item">
-                <a href="#archive" class="nav-link" data-section="archive">归档</a>
-            </li>
-            <li class="nav-item">
-                <a href="#about" class="nav-link" data-section="about">关于我</a>
-            </li>
-            
-            <div class="search-container">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="搜索文章或问题...">
-            </div>
+        <ul class="nav-links">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">归档</a></li>
+            <li><a href="#">关于</a></li>
+            <li><a href="#"><i class="fas fa-search"></i> 搜索</a></li>
         </ul>
         
-        <div class="nav-icons">
-            <button class="icon-btn">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge">3</span>
+        <div class="nav-right">
+            <button class="theme-toggle">
+                <i class="fas fa-moon"></i>
             </button>
-            <img src="https://via.placeholder.com/35" alt="个人头像" class="profile-icon">
-            <button class="hamburger">
-                <i class="fas fa-bars"></i>
-            </button>
+            <button class="login-btn">登录/注册</button>
         </div>
     </nav>
     
-    <!-- 内容区域 -->
-    <section id="home" class="content-section active">
-        <h1>欢迎来到我的博客</h1>
-        <a href="/clock" class="logo">世界时钟</a>
+    <!-- 首页展示区 -->
+    <section class="hero">
+        <div class="hero-bg" id="hero-bg"></div>
+        <div class="hero-content">
+            <h1>分享技术，探索未来</h1>
+            <p>这里是一个专注于技术分享、学习和交流的平台，让我们一起探索编程的无限可能</p>
+            <button class="cta-btn">开始阅读</button>
+        </div>
     </section>
     
-    <section id="news" class="content-section">
-        <h1>最新资讯</h1>
-        <p>这里是资讯内容...</p>
-    </section>
-    
-    <section id="learn" class="content-section">
-        <h1>学习资源</h1>
-        <p>这里是学习内容...</p>
-    </section>
-    
-    <section id="archive" class="content-section">
-        <h1>文章归档</h1>
-        <p>这里是归档内容...</p>
-    </section>
-    
-    <section id="about" class="content-section">
-        <h1>关于我</h1>
-        <p>这里是关于我的内容...</p>
-    </section>
-    
-    <!-- JavaScript -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const navLinks = document.querySelectorAll('.nav-link');
-            const sections = document.querySelectorAll('.content-section');
-            const hamburger = document.querySelector('.hamburger');
-            const navMenu = document.querySelector('.nav-menu');
+    <!-- 文章网格 -->
+    <section class="articles-section">
+        <h2 class="section-title">最新文章</h2>
+        <div class="articles-grid">
+            <!-- 文章卡片1 -->
+            <div class="article-card">
+                <img src="https://via.placeholder.com/600x400/1A5276/FFFFFF?text=Python+编程" alt="Python编程" class="article-img">
+                <div class="article-content">
+                    <h3 class="article-title">Python高级特性详解</h3>
+                    <p class="article-excerpt">探索Python中的生成器、装饰器和上下文管理器等高级特性，提升你的代码质量和效率。</p>
+                    <div class="article-meta">
+                        <span><i class="far fa-calendar"></i> 2025-01-11</span>
+                        <span><i class="far fa-clock"></i> 10分钟阅读</span>
+                    </div>
+                    <a href="#" class="read-more">继续阅读 <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
             
-            // 导航菜单点击事件
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
+            <!-- 文章卡片2 -->
+            <div class="article-card">
+                <img src="https://via.placeholder.com/600x400/5DADE2/FFFFFF?text=Web+开发" alt="Web开发" class="article-img">
+                <div class="article-content">
+                    <h3 class="article-title">现代前端框架对比</h3>
+                    <p class="article-excerpt">深入分析React、Vue和Angular三大框架的优缺点，帮助你为下一个项目选择最合适的技术栈。</p>
+                    <div class="article-meta">
+                        <span><i class="far fa-calendar"></i> 2025-01-10</span>
+                        <span><i class="far fa-clock"></i> 15分钟阅读</span>
+                    </div>
+                    <a href="#" class="read-more">继续阅读 <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+            <!-- 文章卡片3 -->
+            <div class="article-card">
+                <img src="https://via.placeholder.com/600x400/123456/FFFFFF?text=数据科学" alt="数据科学" class="article-img">
+                <div class="article-content">
+                    <h3 class="article-title">机器学习入门指南</h3>
+                    <p class="article-excerpt">从零开始学习机器学习的基础概念、算法和实践应用，适合初学者的完整入门指南。</p>
+                    <div class="article-meta">
+                        <span><i class="far fa-calendar"></i> 2025-01-15</span>
+                        <span><i class="far fa-clock"></i> 12分钟阅读</span>
+                    </div>
+                    <a href="#" class="read-more">继续阅读 <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 特色主题区 -->
+    <section class="featured-topics">
+        <h2 class="section-title">特色主题</h2>
+        <div class="topics-container">
+            <!-- 主题卡片1 -->
+            <div class="topic-card">
+                <div class="topic-icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <h3 class="topic-title">Web开发</h3>
+                <p class="topic-desc">探索现代Web开发技术，包括前端框架、后端架构和响应式设计等热门话题。</p>
+            </div>
+            
+            <!-- 主题卡片2 -->
+            <div class="topic-card">
+                <div class="topic-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3 class="topic-title">移动应用开发</h3>
+                <p class="topic-desc">学习iOS和Android开发，以及React Native、Flutter等跨平台解决方案。</p>
+            </div>
+            
+            <!-- 主题卡片3 -->
+            <div class="topic-card">
+                <div class="topic-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3 class="topic-title">数据库与存储</h3>
+                <p class="topic-desc">深入了解关系型和NoSQL数据库，以及现代数据存储和处理技术。</p>
+            </div>
+            
+            <!-- 主题卡片4 -->
+            <div class="topic-card">
+                <div class="topic-icon">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <h3 class="topic-title">云计算与DevOps</h3>
+                <p class="topic-desc">掌握云服务、容器化和自动化部署等现代软件交付方法。</p>
+            </div>
+            
+            <!-- 主题卡片5 -->
+            <div class="topic-card">
+                <div class="topic-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="topic-title">人工智能</h3>
+                <p class="topic-desc">探索机器学习、深度学习和自然语言处理等AI领域的前沿技术。</p>
+            </div>
+        </div>
+        <div class="view-more-container">
+            <a href="#" class="view-more">查看更多主题</a>
+        </div>
+    </section>
+    
+    <!-- 热门标签 -->
+    <section class="tags-section">
+        <h2 class="section-title">热门标签</h2>
+        <div class="tags-cloud">
+            <a href="#" class="tag tag-5">Python</a>
+            <a href="#" class="tag tag-4">JavaScript</a>
+            <a href="#" class="tag tag-5">Web开发</a>
+            <a href="#" class="tag tag-3">数据库</a>
+            <a href="#" class="tag tag-2">Linux</a>
+            <a href="#" class="tag tag-4">机器学习</a>
+            <a href="#" class="tag tag-3">前端</a>
+            <a href="#" class="tag tag-2">后端</a>
+            <a href="#" class="tag tag-1">Docker</a>
+            <a href="#" class="tag tag-3">云计算</a>
+            <a href="#" class="tag tag-2">安全</a>
+            <a href="#" class="tag tag-4">React</a>
+            <a href="#" class="tag tag-3">Vue</a>
+            <a href="#" class="tag tag-1">TypeScript</a>
+            <a href="#" class="tag tag-2">算法</a>
+            <a href="#" class="tag tag-3">Git</a>
+            <a href="#" class="tag tag-1">API</a>
+            <a href="#" class="tag tag-2">测试</a>
+        </div>
+    </section>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-about">
+                <div class="footer-logo">
+                    <i class="fas fa-code"></i>
+                    <span class="footer-logo-text">技术博客</span>
+                </div>
+                <p>我们致力于分享高质量的技术内容，帮助开发者成长和进步。加入我们的社区，一起探索技术的无限可能。</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-links-container">
+                <h3 class="footer-title">快速链接</h3>
+                <ul class="footer-links">
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#">归档</a></li>
+                    <li><a href="#">关于我们</a></li>
+                    <li><a href="#">联系我们</a></li>
+                    <li><a href="#">隐私政策</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links-container">
+                <h3 class="footer-title">热门主题</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Web开发</a></li>
+                    <li><a href="#">移动应用</a></li>
+                    <li><a href="#">数据科学</a></li>
+                    <li><a href="#">云计算</a></li>
+                    <li><a href="#">DevOps</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-contact">
+                <h3 class="footer-title">联系我们</h3>
+                <p><i class="fas fa-envelope"></i> 3036474166@qq.com</p>
+                <p><i class="fas fa-phone"></i> +86 123 4567 8901</p>
+                <p><i class="fas fa-map-marker-alt"></i> 北京市海淀区中关村</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 技术博客 | 保留所有权利</p>
+        </div>
+    </footer>
+    
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // 动态背景线条效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const heroBg = document.getElementById('hero-bg');
+            const lineCount = 15;
+            
+            // 创建背景线条
+            for (let i = 0; i < lineCount; i++) {
+                const line = document.createElement('div');
+                line.classList.add('hero-line');
+                
+                // 随机线条样式
+                const isHorizontal = Math.random() > 0.5;
+                const width = isHorizontal ? Math.random() * 200 + 100 : Math.random() * 3 + 1;
+                const height = isHorizontal ? Math.random() * 3 + 1 : Math.random() * 200 + 100;
+                
+                // 随机位置
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                
+                // 设置样式
+                line.style.width = `${width}px`;
+                line.style.height = `${height}px`;
+                line.style.left = `${left}%`;
+                line.style.top = `${top}%`;
+                
+                heroBg.appendChild(line);
+            }
+            
+            // 鼠标移动效果
+            document.addEventListener('mousemove', function(e) {
+                const mouseX = e.clientX / window.innerWidth;
+                const mouseY = e.clientY / window.innerHeight;
+                
+                const lines = document.querySelectorAll('.hero-line');
+                lines.forEach(line => {
+                    const moveX = (mouseX - 0.5) * 20;
+                    const moveY = (mouseY - 0.5) * 20;
                     
-                    // 移除所有active类
-                    navLinks.forEach(item => item.classList.remove('active'));
-                    sections.forEach(section => section.classList.remove('active'));
-                    
-                    // 添加active类到当前点击的链接
-                    this.classList.add('active');
-                    
-                    // 显示对应的内容区域
-                    const sectionId = this.getAttribute('data-section');
-                    document.getElementById(sectionId).classList.add('active');
-                    
-                    // 在移动设备上关闭菜单
-                    if (window.innerWidth <= 768) {
-                        navMenu.classList.remove('active');
-                    }
+                    line.style.transform = `translate(${moveX}px, ${moveY}px)`;
                 });
             });
+        });
+        
+        // 主题切换功能
+        const themeToggle = document.querySelector('.theme-toggle');
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
             
-            // 汉堡菜单点击事件
-            hamburger.addEventListener('click', function() {
-                navMenu.classList.toggle('active');
-            });
-            
-            // 滚轮事件实现平滑切换
-            let isScrolling = false;
-            let currentIndex = 0;
-            
-            window.addEventListener('wheel', function(e) {
-                if (isScrolling) return;
-                
-                isScrolling = true;
-                setTimeout(() => { isScrolling = false; }, 800); // 防抖
-                
-                const direction = e.deltaY > 0 ? 1 : -1;
-                const newIndex = Math.min(Math.max(currentIndex + direction, 0), navLinks.length - 1);
-                
-                if (newIndex !== currentIndex) {
-                    currentIndex = newIndex;
-                    navLinks[currentIndex].click();
-                    
-                    // 添加滑动动画效果
-                    const navbar = document.querySelector('.navbar');
-                    navbar.style.transform = direction > 0 ? 'translateY(-10px)' : 'translateY(10px)';
-                    setTimeout(() => {
-                        navbar.style.transform = 'translateY(0)';
-                    }, 300);
-                }
-            });
-            
-            // 搜索功能
-            const searchInput = document.querySelector('.search-input');
-            searchInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const searchTerm = this.value.trim();
-                    if (searchTerm) {
-                        alert(`正在搜索: ${searchTerm}`);
-                        // 这里可以添加实际的搜索逻辑
-                        this.value = '';
-                    }
-                }
-            });
+            // 切换图标
+            const icon = themeToggle.querySelector('i');
+            if (icon.classList.contains('fa-moon')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
         });
     </script>
 </body>
