@@ -12,9 +12,9 @@ def clock(request):
 def main(request):
     return render(request, "main.html")
 
-def posts(request):
-    return render(request, "posts.html")
-    
+def articles(request):
+    return render(request, "articles.html")
+
 def archive(request):
     return render(request, "archive.html")
 
