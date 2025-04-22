@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章标题 - 我的博客</title>
+    <!-- 这里可以链接你的 CSS 文件 -->
+    <link rel="stylesheet" href="/static/css/article_styles.css">
+    <!-- 引入 Fira Code 字体 (如果需要) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        /* 可以在这里添加一些基本的页面布局样式 */
+        body {
+            background-color: #F5F5F5;
+            font-family: sans-serif; /* 可以替换为你选择的字体 */
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px; /* 两侧留白 */
+            background-color: #fff; /* 内容区域背景色，可以根据需要调整 */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* 可选：添加一些阴影效果 */
+        }
+        /* 导航栏占位样式 */
+        .navbar {
+            background-color: #333;
+            color: rgb(0, 0, 0);
+            padding: 15px 0;
+            text-align: center; /* 示例样式 */
+        }
+        /* 文章标题区 */
+        .article-title-area {
+            position: relative;
+            padding: 100px 20px 50px; /* 示例内边距 */
+            color: rgb(0, 0, 0);
+            background-size: cover;
+            background-position: center;
+            /* background-image: url('path/to/your/background-image.jpg'); */ /* 通过 CSS 设置背景图 */
+        }
+        .article-title-area::before { /* 半透明遮罩 */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色 */
+            z-index: 1;
+        }
+        .article-title-area > * { /* 确保内容在遮罩之上 */
+            position: relative;
+            z-index: 2;
+        }
+        .article-title-area h1 {
+            font-size: 2.5em; /* 大号标题 */
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .article-meta span {
+            margin-right: 15px;
+            font-size: 0.9em;
+        }
+        .author-info {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .author-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        /* 文章内容区 */
+        .article-content {
+            padding: 40px 0;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .article-content p {
+            margin-bottom: calc(1.6em * 1.5); /* 段落间距 */
+        }
+        .article-content p:first-of-type::first-letter { /* 首字母大写 */
+            float: left;
+            font-size: 4em; /* 示例大小 */
+            line-height: 1;
+            margin-right: 0.1em;
+            /* 添加装饰性线条样式 */
+        }
+        /* 代码块 */
+        .code-block {
+            position: relative;
+            background-color: #2d2d2d; /* 深色背景 */
+            color: #ccc;
+            padding: 20px;
+            margin-bottom: calc(1.6em * 1.5);
+            overflow-x: auto; /* 水平滚动 */
+            font-family: 'Fira Code', monospace; /* 代码字体 */
+            border-radius: 5px;
+        }
+        .code-block pre {
+            margin: 0;
+            white-space: pre;
+        }
+        .code-block code {
+           display: block; /* 让 code 块占据 pre 的宽度 */
+        }
+        /* 添加行号的样式 (需要 JS 或后端处理) */
+        .code-block .line-numbers {
+            float: left;
+            text-align: right;
+            padding-right: 10px;
+            border-right: 1px solid #555;
+            margin-right: 10px;
+            user-select: none; /* 禁止选中行号 */
+            color: #888;
+        }
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        .copy-button:hover {
+            opacity: 1;
+        }
+        /* 内联图片 */
+        .inline-image {
+            margin-bottom: calc(1.6em * 1.5);
+            text-align: center; /* 图片居中 */
+        }
+        .inline-image img {
+            max-width: 100%;
+            height: auto;
+            display: block; /* 消除图片底部空隙 */
+            margin: 0 auto; /* 居中 */
+            opacity: 0; /* 初始透明，用于渐入动画 */
+            animation: fadeIn 0.5s forwards; /* 渐入动画 */
+        }
+        .inline-image figcaption {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+        /* 引用块 */
+        .quote-block {
+            margin: calc(1.6em * 1.5) 0;
+            padding: 15px 20px;
+            border-left: 5px solid #ccc; /* 左侧线条 */
+            background-color: #eee; /* 与背景形成对比 */
+            font-style: italic;
+            color: #555;
+        }
+        /* 相关文章推荐 */
+        .related-articles {
+            padding: 40px 0;
+            border-top: 1px solid #eee;
+        }
+        .related-articles h2 {
+            margin-bottom: 20px;
+        }
+        .related-articles ul {
+            list-style: none;
+            padding: 0;
+        }
+        .related-articles li {
+            margin-bottom: 10px;
+        }
+        .related-articles a {
+            text-decoration: none;
+            color: #337ab7;
+        }
+        .related-articles a:hover {
+            text-decoration: underline;
+        }
+        /* 评论区 */
+        .comment-section {
+            padding: 40px 0;
+            border-top: 1px solid #eee;
+        }
+        .comment-section h2 {
+            margin-bottom: 20px;
+        }
+        .comment-form textarea {
+            width: 100%;
+            min-height: 100px;
+            margin-bottom: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .comment-form button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .comment-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 30px;
+        }
+        .comment-card {
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+        }
+        .comment-avatar img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .comment-content {
+            flex-grow: 1;
+        }
+        .comment-author {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .comment-timestamp {
+            font-size: 0.8em;
+            color: #999;
+        }
+        .comment-text {
+            margin-top: 5px;
+        }
+        /* 页脚 */
+        .footer {
+            background-color: #333;
+            color: #000000;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <!-- 导航链接等 -->
+        <div class="container">
+            我的博客导航
+        </div>
+    </nav>
+
+    <!-- 文章标题区 -->
+    <header class="article-title-area" style="background-image: url('...');"> <!-- 在这里或 CSS 中设置背景图 -->
+        <div class="container">
+            <h1>文章标题示例</h1>
+            <div class="article-meta">
+                <span>发布日期: 2023-10-27</span>
+                <span>分类: 技术</span>
+            </div>
+            <div class="author-info">
+                <img src="/static/img/yuhangyuan.jpg" alt="作者头像">
+                <span>作者名</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 文章内容区 -->
+        <article class="article-content">
+            <p>
+                这是文章的第一段。首字母会有一个特殊的大写样式。Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            </p>
+            <p>
+                这是文章的第二段。Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+
+            <!-- 内联图片 -->
+            <figure class="inline-image">
+                <img src="/static/img/Snipaste_2024-10-11_21-44-20.png" alt="图片描述">
+                <figcaption>这是一个图片说明</figcaption>
+            </figure>
+
+            <p>
+                这是包含代码块之前的段落。
+            </p>
+
+            <!-- 代码块 -->
+            <div class="code-block">
+                <button class="copy-button">复制</button>
+                <pre><code class="language-python"># 这是一个 Python 代码示例
+def greet(name):
+    """这是一个简单的问候函数"""
+    print(f"Hello, {name}!")
+
+# 调用函数
+greet("World")
+# 更多代码行...
+# ...
+# ...
+# ...
+# ...
+# ...
+# ...
+# 最后一行代码
+</code></pre>
+                <!-- 行号可以通过 JS 动态生成或后端渲染时添加 -->
+                <!-- <div class="line-numbers">1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11</div> -->
+            </div>
+
+            <p>
+                这是代码块之后的段落。
+            </p>
+
+            <!-- 引用块 -->
+            <blockquote class="quote-block">
+                这是一个引用块的示例。它应该有不同的背景和左侧的装饰线条。
+            </blockquote>
+
+            <p>
+                文章的最后一段内容。
+            </p>
+        </article>
+
+        <!-- 相关文章推荐 -->
+        <section class="related-articles">
+            <h2>相关文章</h2>
+            <ul>
+                <li><a href="#">相关文章标题 1</a></li>
+                <li><a href="#">相关文章标题 2</a></li>
+                <li><a href="#">相关文章标题 3</a></li>
+            </ul>
+        </section>
+
+        <!-- 评论区 -->
+        <section class="comment-section">
+            <h2>评论区</h2>
+            <!-- 评论表单 -->
+            <form class="comment-form" action="" method="post"> <!-- 替换为实际的提交地址 -->
+                {% csrf_token %} <!-- 如果使用 Django，添加 CSRF token -->
+                <input type="hidden" name="article_id" value="{{ article.id }}"> <!-- 传递文章 ID -->
+                <div>
+                    <textarea name="comment_text" placeholder="请输入你的评论..." required></textarea>
+                </div>
+                <div>
+                    <button type="submit">提交评论</button>
+                </div>
+            </form>
+
+            <!-- 评论列表 -->
+            <ul class="comment-list">
+                <!-- 示例评论 1 -->
+                <li class="comment-card">
+                    <div class="comment-avatar">
+                        <img src="/static/img/yuhangyuan.jpg" alt="评论者头像">
+                    </div>
+                    <div class="comment-content">
+                        <div>
+                            <span class="comment-author">评论者A</span>
+                            <span class="comment-timestamp">2023-10-27 10:30</span>
+                        </div>
+                        <p class="comment-text">这是一条示例评论。</p>
+                    </div>
+                </li>
+                <!-- 示例评论 2 -->
+                <li class="comment-card">
+                    <div class="comment-avatar">
+                        <img src="/static/img/yuhangyuan.jpg" alt="评论者头像">
+                    </div>
+                    <div class="comment-content">
+                        <div>
+                            <span class="comment-author">评论者B</span>
+                            <span class="comment-timestamp">2023-10-27 11:15</span>
+                        </div>
+                        <p class="comment-text">这是另一条评论，内容稍长一些，用于测试换行效果。</p>
+                    </div>
+                </li>
+                <!-- 更多评论... -->
+            </ul>
+        </section>
+    </div> <!-- .container 结束 -->
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            &copy; 2025 我的博客. 保留所有权利。
+        </div>
+    </footer>
+
+    <!-- 这里可以链接你的 JS 文件 -->
+    <script src="/static/js/jquery-3.7.1.min.js"></script>
+    <script>
+        // 简单的代码复制功能示例
+        document.querySelectorAll('.copy-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const codeBlock = button.closest('.code-block');
+                const codeElement = codeBlock.querySelector('code');
+                if (navigator.clipboard && codeElement) {
+                    navigator.clipboard.writeText(codeElement.innerText).then(() => {
+                        button.textContent = '已复制!';
+                        setTimeout(() => {
+                            button.textContent = '复制';
+                        }, 2000); // 2秒后恢复
+                    }).catch(err => {
+                        console.error('无法复制:', err);
+                        alert('复制失败');
+                    });
+                } else {
+                    alert('浏览器不支持 Clipboard API 或未找到代码元素');
+                }
+            });
+        });
+
+        // 图片渐入效果 (CSS 已实现，无需 JS)
+
+        // 代码块行号 (示例，实际可能需要更复杂的逻辑)
+        document.querySelectorAll('.code-block pre code').forEach(codeElement => {
+            const lines = codeElement.innerText.split('\n').length;
+            // 简单的行号添加，实际应用中可能需要更精确的处理空行等
+            // 注意：这种方式会修改 pre 的内容，可能影响复制功能，建议用 CSS counter 或其他库
+            // let lineNumbersHTML = '';
+            // for (let i = 1; i <= lines; i++) {
+            //     lineNumbersHTML += i + '\n';
+            // }
+            // const lineNumbersDiv = document.createElement('div');
+            // lineNumbersDiv.className = 'line-numbers';
+            // lineNumbersDiv.innerText = lineNumbersHTML.trim();
+            // codeElement.parentNode.insertBefore(lineNumbersDiv, codeElement);
+        });
+    </script>
+</body>
+</html>
