@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我 - 个人博客</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        :root {
+            --primary-color: #0a192f;
+            --secondary-color: #112240;
+            --accent-color: #64ffda;
+            --text-color: #ccd6f6;
+            --text-secondary: #8892b0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .dark-theme {
+            --primary-color: #0a192f;
+            --secondary-color: #112240;
+            --accent-color: #64ffda;
+            --text-color: #ccd6f6;
+            --text-secondary: #8892b0;
+        }
+
+        .light-theme {
+            --primary-color: #f5f5f5;
+            --secondary-color: #e0e0e0;
+            --accent-color: #0a8c79;
+            --text-color: #333;
+            --text-secondary: #555;
+        }
+
+        .navbar {
+            background-color: var(--primary-color);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+        }
+
+        .navbar-brand {
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            margin: 0 1rem;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* ASCII肖像区域 */
+        .ascii-portrait {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+            font-family: monospace;
+            text-align: center;
+            min-height: 300px;
+        }
+
+        .ascii-char {
+            display: inline-block;
+            color: #64ffda;
+            font-size: 14px;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ascii-char:hover {
+            color: #fff;
+            transform: scale(1.5);
+        }
+
+        .tooltip-custom {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 100;
+            max-width: 300px;
+            display: none;
+        }
+
+        .detail-card {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--secondary-color);
+            padding: 20px;
+            border-radius: 8px;
+            z-index: 1000;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
+        .detail-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .detail-card .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .challenge-btn {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 5px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            float: right;
+        }
+
+        /* 技能区域 */
+        .skills-section {
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .skills-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .skill-category {
+            background-color: rgba(100, 255, 218, 0.1);
+            color: var(--text-color);
+            border: 1px solid var(--accent-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .skill-category.active {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        .skill-tree {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .skill-item {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            width: calc(33.333% - 20px);
+            min-width: 200px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .skill-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .skill-icon {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .skill-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .skill-years {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .skill-progress {
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent-color);
+        }
+
+        .skill-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* 精神内核区域 */
+        .mindset-section {
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            padding: 2rem;
+            position: relative;
+            min-height: 400px;
+        }
+
+        .core-values {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, var(--accent-color) 0%, rgba(100, 255, 218, 0.1) 70%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .core-text {
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .belief-branches {
+            position: relative;
+            margin-top: 50px;
+        }
+
+        .belief-branch {
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .belief-branch:hover {
+            transform: translateY(-5px);
+            background-color: rgba(100, 255, 218, 0.1);
+        }
+
+        .belief-title {
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .belief-description {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .belief-quote {
+            font-style: italic;
+            border-left: 3px solid var(--accent-color);
+            padding-left: 10px;
+        }
+
+        /* 页脚 */
+        footer {
+            background-color: var(--primary-color);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .social-link {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .social-link:hover {
+            color: var(--accent-color);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .row {
+                flex-direction: column;
+            }
+            .skill-item {
+                width: 100%;
+            }
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .skills-section {
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .mindset-section {
+            animation: slideInRight 1s ease-out;
+        }
+
+        .ascii-portrait {
+            animation: fadeIn 2s ease-out;
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <!-- 顶部导航栏 -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">我的博客</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">博客</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">项目</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">关于</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">联系</a>
+                    </li>
+                </ul>
+                <button class="theme-toggle ms-3" id="themeToggle">
+                    <i class="fa fa-moon-o"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- ASCII肖像区域 -->
+        <div class="ascii-portrait" id="asciiPortrait">
+            <!-- ASCII字符将通过JavaScript动态生成 -->
+            <div class="loading-text">ASCII肖像加载中...</div>
+        </div>
+
+        <div class="row">
+            <!-- 技能区域 -->
+            <div class="col-md-6">
+                <div class="skills-section">
+                    <h2>技能树</h2>
+                    <div class="skills-nav" id="skillsNav">
+                        <div class="skill-category active" data-category="all">全部</div>
+                        <div class="skill-category" data-category="languages">编程语言</div>
+                        <div class="skill-category" data-category="frameworks">开发框架</div>
+                        <div class="skill-category" data-category="tools">工具与平台</div>
+                        <div class="skill-category" data-category="databases">数据库</div>
+                        <div class="skill-category" data-category="others">其他技能</div>
+                    </div>
+                    
+                    <div class="skill-tree" id="skillTree">
+                        <!-- 技能项将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 精神内核 -->
+            <div class="col-md-6">
+                <div class="mindset-section">
+                    <h2>精神内核</h2>
+                    <div class="core-values">
+                        <div class="core-text">解决问题</div>
+                    </div>
+                    
+                    <div class="belief-branches" id="beliefBranches">
+                        <!-- 信念分支将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fa fa-github"></i></a>
+                <a href="#" class="social-link"><i class="fa fa-linkedin"></i></a>
+                <a href="#" class="social-link"><i class="fa fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fa fa-envelope"></i></a>
+            </div>
+            <p>&copy; 2023 我的个人博客. 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <!-- 算法题详情卡片模板 -->
+    <div class="detail-card" id="detailCard">
+        <button class="close-btn">&times;</button>
+        <h3 id="problemTitle">算法题标题</h3>
+        <div class="problem-difficulty" id="problemDifficulty">难度: 中等</div>
+        <div class="problem-date" id="problemDate">解决时间: 2023-10-15</div>
+        <hr>
+        <h5>题目描述:</h5>
+        <div id="problemDescription"></div>
+        <h5 class="mt-3">解决思路:</h5>
+        <div id="problemSolution"></div>
+        <div class="mt-3">
+            <button class="btn btn-sm btn-secondary" id="toggleCode">显示代码</button>
+            <div id="codeImplementation" style="display: none; margin-top: 10px;">
+                <pre><code id="solutionCode"></code></pre>
+            </div>
+        </div>
+        <div class="mt-3">
+            <span>标签: </span><span id="problemTags"></span>
+        </div>
+        <div class="mt-3">
+            <a id="challengeLink" class="challenge-btn" href="#" target="_blank">挑战此题</a>
+        </div>
+    </div>
+
+    <!-- 技能详情卡片模板 -->
+    <div class="detail-card" id="skillDetailCard">
+        <button class="close-btn">&times;</button>
+        <h3 id="skillDetailTitle">技能名称</h3>
+        <div id="skillDetailYears">使用年限: 5年</div>
+        <hr>
+        <h5>技能描述:</h5>
+        <div id="skillDetailDescription"></div>
+        <h5 class="mt-3">学习资源:</h5>
+        <div id="skillDetailResources"></div>
+        <h5 class="mt-3">相关项目:</h5>
+        <div id="skillDetailProjects"></div>
+        <h5 class="mt-3">应用场景:</h5>
+        <div id="skillDetailUseCases"></div>
+    </div>
+
+    <!-- 信念详情卡片模板 -->
+    <div class="detail-card" id="beliefDetailCard">
+        <button class="close-btn">&times;</button>
+        <h3 id="beliefDetailTitle">信念标题</h3>
+        <hr>
+        <h5>详细描述:</h5>
+        <div id="beliefDetailDescription"></div>
+        <h5 class="mt-3">个人故事:</h5>
+        <div id="beliefDetailStory"></div>
+        <h5 class="mt-3">相关案例:</h5>
+        <div id="beliefDetailCases"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 主题切换
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            
+            themeToggle.addEventListener('click', function() {
+                if (body.classList.contains('dark-theme')) {
+                    body.classList.remove('dark-theme');
+                    body.classList.add('light-theme');
+                    themeToggle.innerHTML = '<i class="fa fa-sun-o"></i>';
+                } else {
+                    body.classList.remove('light-theme');
+                    body.classList.add('dark-theme');
+                    themeToggle.innerHTML = '<i class="fa fa-moon-o"></i>';
+                }
+            });
+
+            // ASCII肖像生成
+            const asciiPortrait = document.getElementById('asciiPortrait');
+            const asciiChars = ['/', '\\', '|', '-', '#', '@', '%', '*', '+', '.', ':', ';'];
+            const algorithmProblems = [
+                {
+                    id: 1,
+                    title: "两数之和",
+                    difficulty: "简单",
+                    date: "2023-10-01",
+                    description: "给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出和为目标值 target 的那两个整数，并返回它们的数组下标。",
+                    solution: "使用哈希表存储遍历过的元素及其索引，对于每个元素，检查target减去当前元素的结果是否在哈希表中。",
+                    code: "function twoSum(nums, target) {\n  const map = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    const complement = target - nums[i];\n    if (map.has(complement)) {\n      return [map.get(complement), i];\n    }\n    map.set(nums[i], i);\n  }\n  return [];\n}",
+                    tags: ["数组", "哈希表"],
+                    link: "https://leetcode.com/problems/two-sum/"
+                },
+                {
+                    id: 2,
+                    title: "合并两个有序链表",
+                    difficulty: "简单",
+                    date: "2023-10-05",
+                    description: "将两个升序链表合并为一个新的升序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。",
+                    solution: "使用递归或迭代方法，比较两个链表的头节点，选择较小的节点作为新链表的下一个节点。",
+                    code: "function mergeTwoLists(l1, l2) {\n  if (!l1) return l2;\n  if (!l2) return l1;\n  if (l1.val < l2.val) {\n    l1.next = mergeTwoLists(l1.next, l2);\n    return l1;\n  } else {\n    l2.next = mergeTwoLists(l1, l2.next);\n    return l2;\n  }\n}",
+                    tags: ["链表", "递归"],
+                    link: "https://leetcode.com/problems/merge-two-sorted-lists/"
+                },
+                {
+                    id: 3,
+                    title: "最长回文子串",
+                    difficulty: "中等",
+                    date: "2023-10-10",
+                    description: "给你一个字符串 s，找到 s 中最长的回文子串。",
+                    solution: "使用中心扩展法，从每个位置向两边扩展，检查是否形成回文。考虑奇数和偶数长度的回文。",
+                    code: "function longestPalindrome(s) {\n  let start = 0, maxLength = 1;\n  function expandAroundCenter(left, right) {\n    while (left >= 0 && right < s.length && s[left] === s[right]) {\n      const currLength = right - left + 1;\n      if (currLength > maxLength) {\n        maxLength = currLength;\n        start = left;\n      }\n      left--;\n      right++;\n    }\n  }\n  for (let i = 0; i < s.length; i++) {\n    expandAroundCenter(i, i); // 奇数长度\n    expandAroundCenter(i, i + 1); // 偶数长度\n  }\n  return s.substring(start, start + maxLength);\n}",
+                    tags: ["字符串", "动态规划"],
+                    link: "https://leetcode.com/problems/longest-palindromic-substring/"
+                },
+                // 更多算法题...
+            ];
+
+            // 生成ASCII肖像
+            function generateAsciiPortrait() {
+                asciiPortrait.innerHTML = '';
+                const width = 50;
+                const height = 20;
+                
+                for (let i = 0; i < height; i++) {
+                    for (let j = 0; j < width; j++) {
+                        // 创建一个简单的人脸形状
+                        let char = ' ';
+                        
+                        // 头部轮廓
+                        if ((i === 3 && j >= 20 && j <= 30) || 
+                            (i === 4 && (j === 19 || j === 31)) ||
+                            (i >= 5 && i <= 15 && (j === 18 || j === 32)) ||
+                            (i === 16 && (j >= 19 && j <= 31))) {
+                            char = '#';
+                        }
+                        // 眼睛
+                        else if ((i === 7 && (j === 22 || j === 28))) {
+                            char = '@';
+                        }
+                        // 鼻子
+                        else if ((i === 9 && j === 25) || (i === 10 && j === 25) || (i === 11 && (j === 24 || j === 26))) {
+                            char = '|';
+                        }
+                        // 嘴巴
+                        else if (i === 13 && j >= 22 && j <= 28) {
+                            char = '-';
+                        }
+                        
+                        if (char !== ' ') {
+                            const randomProblemIndex = Math.floor(Math.random() * algorithmProblems.length);
+                            const problem = algorithmProblems[randomProblemIndex];
+                            
+                            const asciiChar = document.createElement('span');
+                            asciiChar.className = 'ascii-char';
+                            asciiChar.textContent = asciiChars[Math.floor(Math.random() * asciiChars.length)];
+                            asciiChar.dataset.problemId = problem.id;
+                            
+                            // 添加鼠标悬停事件
+                            asciiChar.addEventListener('mouseover', function(e) {
+                                const problemId = this.dataset.problemId;
+                                const problem = algorithmProblems.find(p => p.id == problemId);
+                                
+                                const tooltip = document.createElement('div');
+                                tooltip.className = 'tooltip-custom';
+                                tooltip.innerHTML = `
+                                    <strong>${problem.title}</strong><br>
+                                    难度: ${problem.difficulty}<br>
+                                    解决时间: ${problem.date}
+                                `;
+                                
+                                tooltip.style.left = e.pageX + 'px';
+                                tooltip.style.top = e.pageY + 'px';
+                                document.body.appendChild(tooltip);
+                                
+                                this.addEventListener('mousemove', function(e) {
+                                    tooltip.style.left = (e.pageX + 10) + 'px';
+                                    tooltip.style.top = (e.pageY + 10) + 'px';
+                                });
+                                
+                                this.addEventListener('mouseout', function() {
+                                    document.body.removeChild(tooltip);
+                                });
+                            });
+                            
+                            // 添加点击事件
+                            asciiChar.addEventListener('click', function() {
+                                const problemId = this.dataset.problemId;
+                                const problem = algorithmProblems.find(p => p.id == problemId);
+                                
+                                document.getElementById('problemTitle').textContent = problem.title;
+                                document.getElementById('problemDifficulty').textContent = '难度: ' + problem.difficulty;
+                                document.getElementById('problemDate').textContent = '解决时间: ' + problem.date;
+                                document.getElementById('problemDescription').textContent = problem.description;
+                                document.getElementById('problemSolution').textContent = problem.solution;
+                                document.getElementById('solutionCode').textContent = problem.code;
+                                document.getElementById('problemTags').textContent = problem.tags.join(', ');
+                                document.getElementById('challengeLink').href = problem.link;
+                                
+                                document.getElementById('detailCard').style.display = 'block';
+                            });
+                            
+                            asciiPortrait.appendChild(asciiChar);
+                        } else {
+                            const space = document.createElement('span');
+                            space.textContent = ' ';
+                            asciiPortrait.appendChild(space);
+                        }
+                    }
+                    asciiPortrait.appendChild(document.createElement('br'));
+                }
+            }
+            
+            generateAsciiPortrait();
+            
+            // 关闭详情卡片
+            document.querySelectorAll('.close-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.parentElement.style.display = 'none';
+                });
+            });
+            
+            // 切换代码显示
+            document.getElementById('toggleCode').addEventListener('click', function() {
+                const codeBlock = document.getElementById('codeImplementation');
+                if (codeBlock.style.display === 'none') {
+                    codeBlock.style.display = 'block';
+                    this.textContent = '隐藏代码';
+                } else {
+                    codeBlock.style.display = 'none';
+                    this.textContent = '显示代码';
+                }
+            });
+            
+            // 技能数据
+            const skills = [
+                {
+                    id: 1,
+                    name: "Python",
+                    category: "languages",
+                    icon: "fa-python",
+                    years: "5年",
+                    proficiency: 90, // 百分比
+                    description: "主要用于数据处理与爬虫开发",
+                    resources: [
+                        { name: "Python官方文档", url: "https://docs.python.org/" },
+                        { name: "Real Python教程", url: "https://realpython.com/" }
+                    ],
+                    projects: [
+                        { name: "数据分析平台", url: "#" },
+                        { name: "网络爬虫框架", url: "#" }
+                    ],
+                    useCases: "用于数据分析、网络爬虫、自动化脚本和后端API开发"
+                },
+                {
+                    id: 2,
+                    name: "JavaScript",
+                    category: "languages",
+                    icon: "fa-js",
+                    years: "4年",
+                    proficiency: 85,
+                    description: "前端开发和Node.js后端",
+                    resources: [
+                        { name: "MDN Web文档", url: "https://developer.mozilla.org/" },
+                        { name: "JavaScript.info", url: "https://javascript.info/" }
+                    ],
+                    projects: [
+                        { name: "交互式数据可视化", url: "#" },
+                        { name: "实时聊天应用", url: "#" }
+                    ],
+                    useCases: "构建响应式Web应用、单页应用和服务器端应用"
+                },
+                {
+                    id: 3,
+                    name: "React",
+                    category: "frameworks",
+                    icon: "fa-react",
+                    years: "3年",
+                    proficiency: 80,
+                    description: "构建用户界面的JavaScript库",
+                    resources: [
+                        { name: "React官方文档", url: "https://reactjs.org/docs/getting-started.html" },
+                        { name: "React教程", url: "https://reactjs.org/tutorial/tutorial.html" }
+                    ],
+                    projects: [
+                        { name: "企业管理系统", url: "#" },
+                        { name: "电子商务平台", url: "#" }
+                    ],
+                    useCases: "构建高性能、可复用的UI组件和单页应用"
+                },
+                {
+                    id: 4,
+                    name: "Node.js",
+                    category: "frameworks",
+                    icon: "fa-node-js",
+                    years: "3年",
+                    proficiency: 75,
+                    description: "基于Chrome V8引擎的JavaScript运行环境",
+                    resources: [
+                        { name: "Node.js官方文档", url: "https://nodejs.org/en/docs/" },
+                        { name: "Node.js最佳实践", url: "https://github.com/goldbergyoni/nodebestpractices" }
+                    ],
+                    projects: [
+                        { name: "RESTful API服务", url: "#" },
+                        { name: "实时数据处理系统", url: "#" }
+                    ],
+                    useCases: "构建高并发API服务、实时应用和微服务架构"
+                },
+                {
+                    id: 5,
+                    name: "Docker",
+                    category: "tools",
+                    icon: "fa-docker",
+                    years: "2年",
+                    proficiency: 70,
+                    description: "容器化应用程序的开发、部署和运行",
+                    resources: [
+                        { name: "Docker官方文档", url: "https://docs.docker.com/" },
+                        { name: "Docker实战", url: "https://www.manning.com/books/docker-in-action-second-edition" }
+                    ],
+                    projects: [
+                        { name: "微服务容器化部署", url: "#" },
+                        { name: "CI/CD流水线集成", url: "#" }
+                    ],
+                    useCases: "应用容器化、开发环境标准化和持续集成/部署"
+                },
+                {
+                    id: 6,
+                    name: "MySQL",
+                    category: "databases",
+                    icon: "fa-database",
+                    years: "4年",
+                    proficiency: 85,
+                    description: "关系型数据库管理系统",
+                    resources: [
+                        { name: "MySQL官方文档", url: "https://dev.mysql.com/doc/" },
+                        { name: "MySQL性能优化", url: "https://www.oreilly.com/library/view/high-performance-mysql/9781492080503/" }
+                    ],
+                    projects: [
+                        { name: "企业数据仓库", url: "#" },
+                        { name: "交易系统数据层", url: "#" }
+                    ],
+                    useCases: "存储结构化数据、复杂查询和事务处理"
+                },
+                {
+                    id: 7,
+                    name: "算法设计",
+                    category: "others",
+                    icon: "fa-code",
+                    years: "3年",
+                    proficiency: 80,
+                    description: "设计和优化算法解决复杂问题",
+                    resources: [
+                        { name: "算法导论", url: "https://mitpress.mit.edu/books/introduction-algorithms-third-edition" },
+                        { name: "LeetCode", url: "https://leetcode.com/" }
+                    ],
+                    projects: [
+                        { name: "推荐系统算法", url: "#" },
+                        { name: "高性能搜索引擎", url: "#" }
+                    ],
+                    useCases: "解决复杂计算问题、优化系统性能和数据处理"
+                },
+                // 更多技能...
+            ];
+            
+            // 生成技能卡片
+            function generateSkillCards(category = 'all') {
+                const skillTree = document.getElementById('skillTree');
+                skillTree.innerHTML = '';
+                
+                skills.forEach(skill => {
+                    if (category === 'all' || skill.category === category) {
+                        const skillCard = document.createElement('div');
+                        skillCard.className = 'skill-item';
+                        skillCard.dataset.skillId = skill.id;
+                        
+                        skillCard.innerHTML = `
+                            <div class="skill-icon"><i class="fa ${skill.icon}"></i></div>
+                            <div class="skill-name">${skill.name}</div>
+                            <div class="skill-years">${skill.years}</div>
+                            <div class="skill-progress">
+                                <div class="progress-bar" style="width: ${skill.proficiency}%"></div>
+                            </div>
+                            <div class="skill-description">${skill.description}</div>
+                        `;
+                        
+                        skillCard.addEventListener('click', function() {
+                            const skillId = this.dataset.skillId;
+                            const skill = skills.find(s => s.id == skillId);
+                            
+                            document.getElementById('skillDetailTitle').textContent = skill.name;
+                            document.getElementById('skillDetailYears').textContent = '使用年限: ' + skill.years;
+                            
+                            document.getElementById('skillDetailDescription').textContent = skill.description;
+                            
+                            const resourcesHtml = skill.resources.map(resource => 
+                                `<a href="${resource.url}" target="_blank">${resource.name}</a>`
+                            ).join('<br>');
+                            document.getElementById('skillDetailResources').innerHTML = resourcesHtml;
+                            
+                            const projectsHtml = skill.projects.map(project => 
+                                `<a href="${project.url}" target="_blank">${project.name}</a>`
+                            ).join('<br>');
+                            document.getElementById('skillDetailProjects').innerHTML = projectsHtml;
+                            
+                            document.getElementById('skillDetailUseCases').textContent = skill.useCases;
+                            
+                            document.getElementById('skillDetailCard').style.display = 'block';
+                        });
+                        
+                        skillTree.appendChild(skillCard);
+                    }
+                });
+            }
+            
+            // 初始化技能卡片
+            generateSkillCards();
+            
+            // 技能分类切换
+            document.querySelectorAll('.skill-category').forEach(category => {
+                category.addEventListener('click', function() {
+                    document.querySelectorAll('.skill-category').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    generateSkillCards(this.dataset.category);
+                });
+            });
+            
+            // 信念数据
+            const beliefs = [
+                {
+                    id: 1,
+                    title: "持续学习",
+                    description: "保持好奇心，不断学习新技术和方法",
+                    quote: "学习不是为了知道更多，而是为了做得更好",
+                    story: "在我职业生涯的早期，我曾经因为专注于一种技术栈而错过了行业的重大变革。这次经历让我意识到持续学习的重要性。从那时起，我每周都会安排时间学习新技术，参加技术社区活动，并与其他开发者交流。",
+                    cases: [
+                        "每周至少阅读一篇技术博客或论文",
+                        "每季度学习一项新技术或框架",
+                        "参与开源项目，从社区中学习"
+                    ]
+                },
+                {
+                    id: 2,
+                    title: "用户导向",
+                    description: "以用户需求为中心，创造有价值的解决方案",
+                    quote: "最好的代码是用户甚至没有注意到的代码",
+                    story: "在一个企业项目中，我们团队开发了一个功能丰富但复杂的系统，结果用户反馈很差。这次失败让我明白，技术的终极目标是服务用户，而不是展示技术本身。从那以后，我始终将用户体验放在首位，确保每一行代码都为用户创造价值。",
+                    cases: [
+                        "在开发前进行用户调研和需求分析",
+                        "使用原型和用户测试验证设计",
+                        "根据用户反馈持续改进产品"
+                    ]
+                },
+                {
+                    id: 3,
+                    title: "代码质量",
+                    description: "追求优雅、高效、可维护的代码实现",
+                    quote: "代码如人，品格决定命运",
+                    story: "在一个遗留系统维护项目中，我花了数周时间理解混乱的代码库，这让我深刻体会到代码质量的重要性。从那时起，我开始严格遵循代码规范，编写全面的测试，并定期重构代码。这些实践不仅提高了我的开发效率，也减少了生产环境中的问题。",
+                    cases: [
+                        "实施代码审查和静态分析",
+                        "编写全面的单元测试和集成测试",
+                        "定期重构代码，消除技术债务"
+                    ]
+                },
+                {
+                    id: 4,
+                    title: "团队协作",
+                    description: "有效沟通，共同解决问题，分享知识",
+                    quote: "个人的智慧是有限的，团队的智慧是无限的",
+                    story: "在一个跨国项目中，我们团队因为沟通不畅导致了严重的进度延误。这次经历让我认识到有效沟通和团队协作的重要性。从那以后，我积极参与团队讨论，分享知识，并帮助其他团队成员解决问题。这种协作精神不仅提高了团队效率，也创造了更好的工作氛围。",
+                    cases: [
+                        "定期组织技术分享会",
+                        "使用协作工具提高团队沟通效率",
+                        "建立知识库，分享最佳实践"
+                    ]
+                }
+            ];
+            
+            // 生成信念卡片
+            function generateBeliefCards() {
+                const beliefBranches = document.getElementById('beliefBranches');
+                beliefBranches.innerHTML = '';
+                
+                beliefs.forEach(belief => {
+                    const beliefCard = document.createElement('div');
+                    beliefCard.className = 'belief-branch';
+                    beliefCard.dataset.beliefId = belief.id;
+                    
+                    beliefCard.innerHTML = `
+                        <div class="belief-title">${belief.title}</div>
+                        <div class="belief-description">${belief.description}</div>
+                        <div class="belief-quote">${belief.quote}</div>
+                    `;
+                    
+                    beliefCard.addEventListener('click', function() {
+                        const beliefId = this.dataset.beliefId;
+                        const belief = beliefs.find(b => b.id == beliefId);
+                        
+                        document.getElementById('beliefDetailTitle').textContent = belief.title;
+                        document.getElementById('beliefDetailDescription').textContent = belief.description;
+                        document.getElementById('beliefDetailStory').textContent = belief.story;
+                        
+                        const casesHtml = belief.cases.map(c => `<li>${c}</li>`).join('');
+                        document.getElementById('beliefDetailCases').innerHTML = `<ul>${casesHtml}</ul>`;
+                        
+                        document.getElementById('beliefDetailCard').style.display = 'block';
+                    });
+                    
+                    beliefBranches.appendChild(beliefCard);
+                });
+            }
+            
+            // 初始化信念卡片
+            generateBeliefCards();
+            
+            // 页面加载动画
+            function animateOnScroll() {
+                const elements = document.querySelectorAll('.skills-section, .mindset-section, .ascii-portrait');
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = 1;
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                }, { threshold: 0.1 });
+                
+                elements.forEach(el => {
+                    el.style.opacity = 0;
+                    el.style.transform = 'translateY(20px)';
+                    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    observer.observe(el);
+                });
+            }
+            
+            // 初始化页面动画
+            animateOnScroll();
+        });
+    </script>
+</body>
+</html>
