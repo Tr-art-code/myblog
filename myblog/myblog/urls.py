@@ -19,7 +19,7 @@ from django.urls import path
 from app01 import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('clock/', views.clock, name='clock'),
     path('main/', views.main, name='main'),
@@ -30,6 +30,4 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('test/', views.test, name='test'),
     path('redirection/', views.redirection, name='redirection'),
-    path('infolist/', views.infolist, name='infolist'),
-    path('deleteinfo/', views.deleteinfo, name='deleteinfo'),
 ]

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}默认标题{% endblock %}</title>
+    <!-- 公共CSS -->
+    <link rel="stylesheet" href="static/plugins/bootstrap-3.4.1-dist/css/bootstrap.css">
+    <style>
+        /* 基础样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #F8F9FA;
+            color: #666666;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        /* 变量定义 - 便于暗色模式切换 */
+        :root {
+            --primary-color: #2D5D8C;
+            --text-color: #666666;
+            --text-light: #999999;
+            --bg-color: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --nav-height: 60px;
+            --transition: all 0.3s ease;
+        }
+    /* 导航栏样式 */
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--nav-height);
+        background-color: var(--bg-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 5%;
+        z-index: 100;
+        transition: box-shadow 0.3s ease;
+    }
+    
+    .navbar.scrolled {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .logo {
+        font-weight: 600;
+        font-size: 22px;
+        color: var(--primary-color);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+    
+    .logo-icon {
+        margin-right: 8px;
+        font-size: 24px;
+    }
+    
+    .nav-menu {
+        display: flex;
+        list-style: none;
+    }
+    
+    .nav-item {
+        margin-left: 30px;
+    }
+    
+    .nav-link {
+        color: var(--text-color);
+        text-decoration: none;
+        font-size: 16px;
+        transition: var(--transition);
+    }
+    
+    .nav-link:hover {
+        color: var(--primary-color);
+    }
+    
+    .search-icon {
+        margin-left: 30px;
+        cursor: pointer;
+        font-size: 18px;
+    }
+    
+    .hamburger {
+        display: none;
+        cursor: pointer;
+        font-size: 24px;
+    }
+        /* 页脚样式 */
+            .footer {
+            /* background-color: var(--card-bg); */
+            padding: 40px 0;
+            text-align: center;
+            font-family: Georgia, serif;
+            color: var(--text-light);
+            margin-top: 140px;
+        }
+        
+        .social-icons {
+            margin: 15px 0;
+        }
+        
+        .social-icon {
+            color: var(--text-color);
+            font-size: 20px;
+            margin: 0 10px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .social-icon:hover {
+            color: var(--primary-color);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    {% block css %}{% endblock %}
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <!-- 导航栏等公共元素 -->
+        <nav class="navbar">
+            <a href="/main" class="logo">
+                <i class="fas fa-feather-alt logo-icon"></i>
+                我的博客
+            </a>
+            
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="/main" class="nav-link">首页</a></li>
+                <li class="nav-item"><a href="/articles" class="nav-link">文章</a></li>
+                <li class="nav-item"><a href="/archive" class="nav-link">归档</a></li>
+                <li class="nav-item"><a href="/about" class="nav-link">关于</a></li>
+                <li class="nav-item">
+                    <a href="/search" class="nav-link search-icon">
+                        <i class="fas fa-search"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- 主要内容区域 -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- 页面底部 -->
+    <footer class="footer">
+        <!-- 版权信息等 -->
+        <div class="social-icons">
+            <a href="https://github.com/yourusername" class="social-icon" target="_blank">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="https://twitter.com/yourusername" class="social-icon" target="_blank">
+                <i class="fab fa-twitter"></i>
+            </a>
+        </div>
+        <p>© 2023 我的博客 | 保留所有权利</p>
+    </footer>
+    
+    <!-- 公共JavaScript -->
+    <script src="static/js/jquery-3.7.1.min.js"></script>
+    <script src="static/plugins/bootstrap-3.4.1-dist/js/bootstrap.js"></script>
+    {% block js %}{% endblock %}
+</body>
+</html>

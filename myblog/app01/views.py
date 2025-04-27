@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render, HttpResponse
-from app01.models import UserInfo
+from app01.models import Tag,Article,ArticleAuthor,Comment
 
 # Create your views here.
 def index(request):
@@ -16,7 +16,16 @@ def articles(request):
     return render(request, "articles.html")
 
 def article_post(request):
-    return render(request, "article_post.html")
+    article_id = request.GET.get("article_id")
+    article = Article.objects.get(id=article_id)
+    prev_article = Article.objects.filter(id__lt=article_id).order_by("-id").first()
+    next_article = Article.objects.filter(id__gt=article_id).order_by("id").first()
+    context = {
+        "article": article,
+        "prev_article": prev_article,
+        "next_article": next_article,
+    }
+    return render(request, "article_post.html", context)
 
 def archive(request):
     return render(request, "archive.html")
@@ -36,29 +45,3 @@ def test(request):
 def redirection(request):
     return redirect("/login/")
     # return redirect("https://www.baidu.com")
-
-def infolist(request):
-    if request.method == "POST":
-        # 获取表单数据
-        username = request.POST.get("name")
-        password = request.POST.get("password")
-        age = request.POST.get("age")
-        
-        # 创建新用户
-        UserInfo.objects.create(
-            username=username,
-            password=password,
-            age=int(age)
-        )
-        
-        # 重定向到用户列表页面
-        return redirect("/infolist/")
-    
-    # 获取所有用户信息
-    user_list = UserInfo.objects.all()
-    
-    return render(request, "infolist.html", {"user_list": user_list})
-def deleteinfo(request):
-    nid = request.GET.get("nid")
-    UserInfo.objects.filter(id=nid).delete()
-    return redirect("/infolist/")
