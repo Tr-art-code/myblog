@@ -1,498 +1,561 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>文章归档 - 我的博客</title>
-    <!-- 这里可以链接你的 CSS 文件 -->
-    <link
-      rel="stylesheet"
-      href="{% static 'plugins/bootstrap-3.4.1-dist/css/bootstrap.css' %}"
-    />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>归档 | 我的博客</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-      /* 可以在这里添加一些基本的 CSS 方便预览，后续应移到单独的 CSS 文件 */
-      body {
-        font-family: sans-serif;
-        margin: 0;
-      }
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-      .navbar,
-      .footer {
-        background-color: #f8f9fa;
-        padding: 10px 0;
-        text-align: center;
-      }
-      .archive-title {
-        text-align: center;
-        margin: 40px 0;
-      }
-      .timeline-filter {
-        text-align: center;
-        margin-bottom: 40px;
-      }
-      .filter-tags button {
-        margin: 5px;
-        padding: 8px 15px; /* Padding still applies */
-        border: 1px solid #ccc;
-        background: none;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-        transition: background-color 0.3s ease, color 0.3s ease; /* 添加过渡效果 */
-        min-width: 80px; /* 新增: 设置最小宽度，确保按钮长度基本一致 */
-        text-align: center; /* 新增: 确保按钮内文本居中 */
-      }
-      .filter-tags button::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 0;
-        height: 2px;
-        background-color: #007bff;
-        transition: width 0.3s ease;
-      }
-      .filter-tags button:hover::after {
-        width: 100%;
-      }
-      /* 新增: 为 active 状态的按钮添加样式 */
-      .filter-tags button.active {
-        background-color: #007bff; /* 主题蓝色背景 */
-        color: white; /* 白色文字 */
-        border-color: #007bff; /* 边框颜色也统一 */
-      }
-      .filter-tags button.active::after {
-          width: 0; /* 选中时可以隐藏下划线动画，避免重叠 */
-      }
-      .timeline-content {
-        position: relative; /* 其他样式，如 padding */
-      }
-      .timeline-line {
-        position: absolute;
-        left: 50%;
-        top: 0;
-        bottom: 0;
-        width: 4px;
-        background-color: #007bff; /* 代码蓝 */
-        transform: translateX(-50%); /* 居中 */ /* 可以添加动画 */
-        animation: timeline-flow 2s linear infinite alternate;
-      }
-      .timeline-item {
-        position: relative;
-        margin-bottom: 50px;
-        display: flex; /* 用于桌面布局 */
-        align-items: center;
-      }
-      .time-point {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 20px;
-        height: 20px;
-        background-color: #007bff;
-        border-radius: 50%;
-        border: 3px solid white;
-        z-index: 1;
-        cursor: pointer;
-        transition: transform 0.3s ease;
-      }
-      .time-point:hover {
-        transform: translateX(-50%) scale(1.5);
-      }
-      /* 预览效果需要 JS 或更复杂的 CSS */
-      .article-card {
-        border: 1px solid #eee;
-        padding: 20px;
-        border-radius: 8px;
-        background-color: white;
-        width: 45%; /* 桌面端宽度 */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-      .timeline-item:nth-child(odd) .article-card {
-        margin-left: 55%; /* 桌面端右侧 */
-      }
-      .timeline-item:nth-child(even) .article-card {
-        margin-right: 55%; /* 桌面端左侧 */
-        text-align: right; /* 可选，让内容靠右 */
-      }
-      .article-card img {
-        max-width: 100%;
-        height: auto;
-        margin-bottom: 10px;
-      }
-      .article-meta {
-        font-size: 0.9em;
-        color: #6c757d;
-        margin-top: 10px;
-      }
-      .read-more {
-        display: inline-block;
-        margin-top: 15px;
-        color: #007bff;
-        text-decoration: none;
-      }
-      .read-more:hover {
-        text-decoration: underline;
-      }
-
-      /* 简单的响应式示例 */
-      @media (max-width: 992px) {
-        /* 平板 */
-        .timeline-line {
-          left: 50px;
-          transform: none;
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .time-point {
-          left: 50px;
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+            padding-top: 60px; /* 为固定导航栏留出空间 */
         }
-        .article-card {
-          width: calc(100% - 100px);
-          margin-left: 100px !important;
-          margin-right: 0 !important;
-          text-align: left !important;
+        
+        /* 顶部导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #f8f8f8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            z-index: 1000;
         }
-        .timeline-item:nth-child(odd) .article-card,
-        .timeline-item:nth-child(even) .article-card {
-          margin-left: 100px;
+        
+        .logo {
+            display: flex;
+            align-items: center;
         }
-      }
-      @media (max-width: 768px) {
-        /* 移动端 */
-        .timeline-line {
-          display: none; /* 移动端可以简化，隐藏线条 */
+        
+        .logo-icon {
+            font-size: 24px;
+            margin-right: 10px;
+            color: #333;
         }
-        .time-point {
-          position: static;
-          transform: none;
-          margin: 0 auto 10px auto; /* 移到卡片上方居中 */
+        
+        .logo-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
         }
-        .article-card {
-          width: 100%;
-          margin-left: 0 !important;
-          margin-right: 0 !important;
-          text-align: left !important;
+        
+        .nav-menu {
+            display: flex;
+            gap: 20px;
         }
-        .timeline-item {
-          flex-direction: column;
+        
+        .nav-item {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
         }
-      }
-
-      /* 简单动画 */
-      @keyframes timeline-flow {
-        from {
-          box-shadow: 0 0 5px #007bff;
+        
+        .nav-item:hover {
+            color: #333;
         }
-        to {
-          box-shadow: 0 0 15px #007bff;
+        
+        .nav-item.active {
+            color: #333;
+            font-weight: 500;
         }
-      }
-    </style>
-  </head>
-  <body>
-    <!-- 1. 导航栏 (假设从模板或单独文件引入) -->
-    <nav class="navbar">
-      <div class="container">
-        <!-- 导航链接 -->
-        <a href="/main">首页</a> | <a href="/articles/">文章</a> |
-        <a href="/about/">关于</a>
-        <!-- ... 其他导航项 ... -->
-      </div>
-    </nav>
-
-    <main class="container">
-      <!-- 2. 归档标题区 -->
-      <header class="archive-title">
-        <h1>文章归档</h1>
-        <p>所有文章的时间轴视图</p>
-      </header>
-
-      <!-- 新增: 搜索框 -->
-      <section
-        class="search-bar"
-        style="
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-bottom: 20px;
-        "
-      >
-        <input
-          type="search"
-          id="searchInput"
-          placeholder="搜索文章标题或摘要..."
-          style="
-            padding: 8px 12px;
-            width: 300px;
-            max-width: 60%; /* Adjust width as needed */
-            border: 1px solid #ccc;
-            border-radius: 4px;
-          "
-        />
-        <button
-          id="searchButton"
-          style="padding: 8px 15px; margin-left: 5px; cursor: pointer"
-        >
-          搜索
-        </button>
-        <!-- 筛选按钮移到这里 -->
-        <button
-          id="toggleFilterBtn"
-          style="
-            padding: 8px 15px;
-            border: 1px solid #ccc;
-            background: none;
+        
+        /* 归档页面样式 */
+        .archive-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 60px); /* 减去导航栏高度 */
+        }
+        
+        /* 顶部导航区 */
+        .archive-header {
+            height: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            border-bottom: 1px solid #eee;
+        }
+        
+        /* 其余样式保持不变 */
+        .archive-title {
+            font-family: 'Times New Roman', serif;
+            font-size: 24px;
+            color: #333;
+        }
+        
+        .year-filter {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .year-btn {
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid #eee;
+            background: transparent;
+            color: #333;
             cursor: pointer;
-            margin-left: 10px; /* Added margin */
-          "
-        >
-          筛选 <span class="caret">&#9662;</span>
-        </button>
-      </section>
-
-      <!-- 3. 时间轴过滤器 -->
-      <section class="timeline-filter">
-        <!-- 移除了之前的 flex 容器 -->
-
-        <!-- 高级过滤器 (默认隐藏, 现在包含年份) -->
-        <div
-          id="advancedFilters"
-          style="
+            transition: all 0.3s;
+        }
+        
+        .year-btn.active {
+            background: #333;
+            color: white;
+        }
+        
+        .search-icon {
+            cursor: pointer;
+            font-size: 18px;
+            color: #999;
+        }
+        
+        .search-container {
             display: none;
-            margin-top: 15px;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
-            text-align: center; /* Center align the filter groups */
-          "
-        >
-          <!-- 年份过滤器移到这里 -->
-          <div class="filter-group filter-years" style="margin-bottom: 15px">
-            <strong>年份:</strong>
-            <div class="filter-tags">
-              <button data-filter-year="all" class="active">全部</button>
-              <button data-filter-year="2024">2024</button>
-              <button data-filter-year="2023">2023</button>
-              <button data-filter-year="2022">2022</button>
-              <!-- 更多年份 -->
-            </div>
-          </div>
-          <!-- 分类过滤器 -->
-          <div
-            class="filter-group filter-categories"
-            style="margin-bottom: 15px"
-          >
-            <strong>分类:</strong>
-            <div class="filter-tags">
-              <button data-filter-category="all" class="active">全部</button>
-              <button data-filter-category="tech">技术</button>
-              <button data-filter-category="life">生活</button>
-              <button data-filter-category="study">学习</button>
-              <!-- 更多分类 -->
-            </div>
-          </div>
-          <!-- 难度过滤器 -->
-          <div class="filter-group filter-difficulty">
-            <strong>难度:</strong>
-            <div class="filter-tags">
-              <button data-filter-difficulty="all" class="active">全部</button>
-              <button data-filter-difficulty="beginner">入门</button>
-              <button data-filter-difficulty="intermediate">中级</button>
-              <button data-filter-difficulty="advanced">高级</button>
-              <!-- 更多难度 -->
-            </div>
-          </div>
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid #eee;
+        }
+        
+        /* 主体内容区 */
+        .archive-content {
+            display: flex;
+            height: 80%;
+            overflow: hidden;
+        }
+        
+        /* 时间轴模块 */
+        .timeline {
+            width: 40%;
+            padding: 30px;
+            position: relative;
+            overflow-y: auto;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            left: 50px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #eee;
+        }
+        
+        .year-node {
+            position: relative;
+            margin: 30px 0;
+            cursor: pointer;
+        }
+        
+        .year-dot {
+            position: absolute;
+            left: 46px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #999;
+            z-index: 1;
+        }
+        
+        .year-node.active .year-dot {
+            background-color: #333;
+            width: 14px;
+            height: 14px;
+            left: 44px;
+        }
+        
+        .year-label {
+            margin-left: 70px;
+            font-size: 18px;
+            color: #333;
+        }
+        
+        .month-tags {
+            display: none;
+            margin: 10px 0 10px 70px;
+        }
+        
+        .month-tag {
+            display: inline-block;
+            margin: 5px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background-color: #f5f5f5;
+            color: #666;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .month-tag.active {
+            background-color: #333;
+            color: white;
+        }
+        
+        /* 卡片流模块 */
+        .article-cards {
+            width: 60%;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .article-card {
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .article-card:hover {
+            border-left: 3px solid #333;
+            transform: translateX(5px);
+        }
+        
+        .article-date {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 5px;
+        }
+        
+        .article-title {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .article-tags {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .article-tag {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .load-more {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            cursor: pointer;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-menu {
+                gap: 10px;
+            }
+            
+            .archive-content {
+                flex-direction: column;
+            }
+            
+            .timeline {
+                width: 100%;
+                height: auto;
+                padding: 15px;
+            }
+            
+            .timeline-line {
+                display: none;
+            }
+            
+            .year-node {
+                display: inline-block;
+                margin: 10px;
+            }
+            
+            .year-dot {
+                display: none;
+            }
+            
+            .year-label {
+                margin-left: 0;
+            }
+            
+            .month-tags {
+                margin-left: 0;
+                white-space: nowrap;
+                overflow-x: auto;
+            }
+            
+            .article-cards {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="navbar">
+        <div class="logo">
+            <a href="/main" style="text-decoration: none;">
+            <i class="fas fa-feather-alt logo-icon"></i>
+            <span class="logo-text">我的博客</span>
+        </a>
         </div>
-      </section>
-
-      <!-- 4. 时间轴内容 -->
-      <section class="timeline-content">
-        <div class="timeline-line"></div>
-        <!-- 时间轴线条 -->
-
-        <!-- 时间轴条目示例 1 -->
-        <div
-          class="timeline-item"
-          data-year="2024"
-          data-category="tech"
-          data-difficulty="intermediate"
-        >
-          <div class="time-point" title="2024-07-20">
-            <!-- 悬停预览内容可放这里或通过 JS 实现 -->
-          </div>
-          <article class="article-card">
-            <img src="placeholder-thumb.jpg" alt="文章缩略图" />
-            <h2>文章标题 1</h2>
-            <p class="article-summary">
-              这是文章的简短摘要，介绍文章的主要内容...
-            </p>
-            <div class="article-meta">
-              <span>发布日期: 2024-07-20</span> |
-              <span>阅读时间: 约 5 分钟</span>
-            </div>
-            <a href="/post/article-1/" class="read-more">继续阅读 &rarr;</a>
-          </article>
+        <div class="nav-menu">
+            <a href="/main/" class="nav-item">首页</a>
+            <a href="/articles/" class="nav-item">文章</a>
+            <a href="/archive/" class="nav-item active">归档</a>
+            <a href="/about/" class="nav-item">关于</a>
         </div>
+    </div>
 
-        <!-- 时间轴条目示例 2 -->
-        <div
-          class="timeline-item"
-          data-year="2024"
-          data-category="life"
-          data-difficulty="beginner"
-        >
-          <div class="time-point" title="2024-06-15"></div>
-          <article class="article-card">
-            <img src="placeholder-thumb-2.jpg" alt="文章缩略图" />
-            <h2>生活随笔：夏日午后</h2>
-            <p class="article-summary">记录一个宁静夏日午后的所思所想...</p>
-            <div class="article-meta">
-              <span>发布日期: 2024-06-15</span> |
-              <span>阅读时间: 约 3 分钟</span>
+    <div class="archive-container">
+        <!-- 顶部导航区 -->
+        <div class="archive-header">
+            <h1 class="archive-title">归档</h1>
+            
+            <div class="year-filter">
+                <button class="year-btn active">全部</button>
+                <button class="year-btn">2024</button>
+                <button class="year-btn">2023</button>
             </div>
-            <a href="/post/article-2/" class="read-more">继续阅读 &rarr;</a>
-          </article>
-        </div>
-
-        <!-- 时间轴条目示例 3 -->
-        <div
-          class="timeline-item"
-          data-year="2023"
-          data-category="study"
-          data-difficulty="advanced"
-        >
-          <div class="time-point" title="2023-11-01"></div>
-          <article class="article-card">
-            <h2>深入理解XXX技术</h2>
-            <p class="article-summary">
-              对XXX技术的核心原理进行深入探讨和分析...
-            </p>
-            <div class="article-meta">
-              <span>发布日期: 2023-11-01</span> |
-              <span>阅读时间: 约 15 分钟</span>
+            
+            <div class="search-icon" onclick="toggleSearch()">
+                <i class="fas fa-search"></i>
             </div>
-            <a href="/post/article-3/" class="read-more">继续阅读 &rarr;</a>
-          </article>
+            
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="搜索文章...">
+            </div>
         </div>
+        
+        <!-- 主体内容区 -->
+        <div class="archive-content">
+            <!-- 时间轴模块 -->
+            <div class="timeline">
+                <div class="timeline-line"></div>
+                
+                <div class="year-node active" onclick="toggleYear(this, '2024')">
+                    <div class="year-dot"></div>
+                    <div class="year-label">2024</div>
+                    <div class="month-tags">
+                        <span class="month-tag">Jan</span>
+                        <span class="month-tag">Feb</span>
+                        <span class="month-tag">Mar</span>
+                        <span class="month-tag">Apr</span>
+                        <span class="month-tag">May</span>
+                        <span class="month-tag">Jun</span>
+                        <span class="month-tag">Jul</span>
+                        <span class="month-tag">Aug</span>
+                        <span class="month-tag">Sep</span>
+                        <span class="month-tag">Oct</span>
+                        <span class="month-tag">Nov</span>
+                        <span class="month-tag">Dec</span>
+                    </div>
+                </div>
+                
+                <div class="year-node" onclick="toggleYear(this, '2023')">
+                    <div class="year-dot"></div>
+                    <div class="year-label">2023</div>
+                    <div class="month-tags">
+                        <span class="month-tag">Jan</span>
+                        <span class="month-tag">Feb</span>
+                        <span class="month-tag">Mar</span>
+                        <span class="month-tag">Apr</span>
+                        <span class="month-tag">May</span>
+                        <span class="month-tag">Jun</span>
+                        <span class="month-tag">Jul</span>
+                        <span class="month-tag">Aug</span>
+                        <span class="month-tag">Sep</span>
+                        <span class="month-tag">Oct</span>
+                        <span class="month-tag">Nov</span>
+                        <span class="month-tag">Dec</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 卡片流模块 -->
+            <div class="article-cards">
+                <!-- 这里使用Django模板语法循环文章数据 -->
+                {% for article in articles %}
+                <div class="article-card" data-year="{{ article.created_time|date:'Y' }}" data-month="{{ article.created_time|date:'M' }}">
+                    <div class="article-date">{{ article.created_time|date:"Y/m/d" }}</div>
+                    <div class="article-title">{{ article.title }}</div>
+                    <div class="article-tags">
+                        {% for tag in article.tags.all %}
+                        <span class="article-tag">#{{ tag.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="no-articles">暂无文章</div>
+                {% endfor %}
+                
+                <div class="load-more">加载更多</div>
+            </div>
+        </div>
+    </div>
 
-        <!-- 更多时间轴条目 -->
-      </section>
-    </main>
-
-    <!-- 5. 页脚 (假设从模板或单独文件引入) -->
-    <footer class="footer">
-      <div class="container">
-        <p>&copy; 2024 我的博客. 保留所有权利.</p>
-        <!-- 其他页脚信息 -->
-      </div>
-    </footer>
-
-    <!-- 可以在这里引入 JS 文件 -->
-    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
     <script>
-      // 筛选按钮点击事件
-      document
-        .getElementById("toggleFilterBtn")
-        .addEventListener("click", function () {
-          const advancedFilters = document.getElementById("advancedFilters");
-          const caret = this.querySelector(".caret");
-          if (advancedFilters.style.display === "none") {
-            advancedFilters.style.display = "block";
-            caret.innerHTML = "&#9652;"; // 向上的箭头
-          } else {
-            advancedFilters.style.display = "none";
-            caret.innerHTML = "&#9662;"; // 向下的箭头
-          }
+        // 切换搜索框显示
+        function toggleSearch() {
+            const searchContainer = document.querySelector('.search-container');
+            if (searchContainer.style.display === 'block') {
+                searchContainer.style.display = 'none';
+            } else {
+                searchContainer.style.display = 'block';
+                document.querySelector('.search-input').focus();
+            }
+        }
+        
+        // 切换年份展开/收起
+        function toggleYear(element, year) {
+            // 切换年份节点激活状态
+            const yearNodes = document.querySelectorAll('.year-node');
+            yearNodes.forEach(node => {
+                node.classList.remove('active');
+            });
+            element.classList.add('active');
+            
+            // 切换月份标签显示
+            const monthTags = element.querySelector('.month-tags');
+            const allMonthTags = document.querySelectorAll('.month-tags');
+            
+            allMonthTags.forEach(tags => {
+                tags.style.display = 'none';
+            });
+            
+            monthTags.style.display = 'block';
+            
+            // 筛选文章
+            filterArticles(year);
+        }
+        
+        // 筛选文章
+        function filterArticles(year) {
+            const articles = document.querySelectorAll('.article-card');
+            
+            if (year === 'all') {
+                articles.forEach(article => {
+                    article.style.display = 'block';
+                    article.style.opacity = '1';
+                });
+                return;
+            }
+            
+            articles.forEach(article => {
+                if (article.dataset.year === year) {
+                    article.style.display = 'block';
+                    setTimeout(() => {
+                        article.style.opacity = '1';
+                    }, 100);
+                } else {
+                    article.style.opacity = '0';
+                    setTimeout(() => {
+                        article.style.display = 'none';
+                    }, 300);
+                }
+            });
+        }
+        
+        // 年份筛选按钮
+        const yearBtns = document.querySelectorAll('.year-btn');
+        yearBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                yearBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const year = this.textContent === '全部' ? 'all' : this.textContent;
+                filterArticles(year);
+                
+                // 同步时间轴
+                if (year !== 'all') {
+                    const yearNodes = document.querySelectorAll('.year-node');
+                    yearNodes.forEach(node => {
+                        if (node.querySelector('.year-label').textContent === year) {
+                            toggleYear(node, year);
+                        }
+                    });
+                }
+            });
         });
-
-      // 统一获取当前所有过滤器状态的函数
-      function getCurrentFilters() {
-        const searchTerm = document
-          .getElementById("searchInput")
-          .value.toLowerCase();
-        const filters = {
-          year: document.querySelector(".filter-years .active").dataset
-            .filterYear,
-          category: document.querySelector(".filter-categories .active").dataset
-            .filterCategory,
-          difficulty: document.querySelector(".filter-difficulty .active")
-            .dataset.filterDifficulty,
-          search: searchTerm,
-        };
-        return filters;
-      }
-
-      // 过滤器按钮点击事件 (适用于所有年份、分类、难度按钮)
-      document.querySelectorAll(".filter-tags button").forEach((button) => {
-        button.addEventListener("click", () => {
-          // 移除同组按钮的 active 类
-          button.parentNode
-            .querySelectorAll("button")
-            .forEach((btn) => btn.classList.remove("active"));
-          // 给当前按钮添加 active 类
-          button.classList.add("active");
-
-          // 获取所有过滤器状态并执行筛选
-          const filters = getCurrentFilters();
-          console.log("当前过滤器:", filters);
-          filterTimelineItems(filters);
+        
+        // 月份标签点击事件
+        const monthTags = document.querySelectorAll('.month-tag');
+        monthTags.forEach(tag => {
+            tag.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                // 切换激活状态
+                this.parentNode.querySelectorAll('.month-tag').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 筛选该月文章
+                const month = this.textContent;
+                const year = this.closest('.year-node').querySelector('.year-label').textContent;
+                
+                filterArticlesByMonth(year, month);
+            });
         });
-      });
-
-      // 搜索按钮点击事件
-      document.getElementById("searchButton").addEventListener("click", () => {
-        const filters = getCurrentFilters();
-        console.log("执行搜索:", filters);
-        filterTimelineItems(filters);
-      });
-
-      // 搜索框输入事件 (可选, 实现实时搜索)
-      document.getElementById("searchInput").addEventListener("input", () => {
-        const filters = getCurrentFilters();
-        // console.log("实时搜索:", filters); // 避免过多日志，需要时取消注释
-        filterTimelineItems(filters);
-      });
-
-      // 更新筛选函数以包含搜索逻辑
-      function filterTimelineItems(filters) {
-        document.querySelectorAll(".timeline-item").forEach((item) => {
-          const itemYear = item.dataset.year;
-          const itemCategory = item.dataset.category;
-          const itemDifficulty = item.dataset.difficulty;
-          // 获取文章标题和摘要文本用于搜索
-          const title =
-            item.querySelector("h2")?.textContent.toLowerCase() || "";
-          const summary =
-            item.querySelector(".article-summary")?.textContent.toLowerCase() ||
-            "";
-
-          const yearMatch = filters.year === "all" || itemYear === filters.year;
-          const categoryMatch =
-            filters.category === "all" || itemCategory === filters.category;
-          const difficultyMatch =
-            filters.difficulty === "all" ||
-            itemDifficulty === filters.difficulty;
-          // 搜索匹配逻辑: 检查搜索词是否在标题或摘要中
-          const searchMatch =
-            filters.search === "" ||
-            title.includes(filters.search) ||
-            summary.includes(filters.search);
-
-          // 所有条件都满足时才显示
-          if (yearMatch && categoryMatch && difficultyMatch && searchMatch) {
-            item.style.display = ""; // 或者 'flex'/'block' 根据布局需要
-          } else {
-            item.style.display = "none";
-          }
+        
+        // 按月份筛选文章
+        function filterArticlesByMonth(year, month) {
+            const articles = document.querySelectorAll('.article-card');
+            
+            articles.forEach(article => {
+                if (article.dataset.year === year && article.dataset.month === month) {
+                    article.style.order = '-1';
+                    article.style.borderLeft = '3px solid #333';
+                } else {
+                    article.style.order = '0';
+                    article.style.borderLeft = '3px solid transparent';
+                }
+            });
+        }
+        
+        // 搜索功能
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('input', function() {
+            const keyword = this.value.toLowerCase();
+            const articles = document.querySelectorAll('.article-card');
+            
+            articles.forEach(article => {
+                const title = article.querySelector('.article-title').textContent.toLowerCase();
+                const tags = article.querySelector('.article-tags').textContent.toLowerCase();
+                
+                if (title.includes(keyword) || tags.includes(keyword)) {
+                    article.style.display = 'block';
+                } else {
+                    article.style.display = 'none';
+                }
+            });
         });
-      }
-
-      // 初始加载时应用一次默认过滤器 (包括空的搜索词)
-      filterTimelineItems(getCurrentFilters());
+        
+        // 加载更多
+        const loadMore = document.querySelector('.load-more');
+        loadMore.addEventListener('click', function() {
+            // 这里可以添加AJAX加载更多文章的逻辑
+            alert('加载更多文章功能待实现');
+        });
     </script>
-  </body>
+</body>
 </html>

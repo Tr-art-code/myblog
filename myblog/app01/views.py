@@ -15,6 +15,9 @@ def main(request):
 def articles(request):
     return render(request, "articles.html")
 
+def article_post(request):
+    return render(request, "article_post.html")
+
 def archive(request):
     return render(request, "archive.html")
 

@@ -24,6 +24,7 @@ urlpatterns = [
     path('clock/', views.clock, name='clock'),
     path('main/', views.main, name='main'),
     path('articles/', views.articles, name='articles'),
+    path('article/post', views.article_post, name='article_post'),
     path('archive/', views.archive, name='archive'),
     path('about/', views.about, name='about'),
     path('login/', views.login, name='login'),
