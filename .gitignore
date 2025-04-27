@@ -16,4 +16,5 @@ nosetests.xml
 coverage.xml
 *.mo
 local_settings.py
+settings.py
 db.sqlite3
