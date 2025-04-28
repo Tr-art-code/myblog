@@ -17,7 +17,13 @@ def articles(request):
 
 def article_post(request):
     article_id = request.GET.get("article_id")
-    article = Article.objects.get(id=article_id)
+    if article_id is None or not article_id.isdigit():
+        raise Http404("Invalid article ID")
+    article_id = int(article_id)
+    try:
+        article = Article.objects.get(id=article_id)
+    except Article.DoesNotExist:
+        raise Http404("Article not found")
     prev_article = Article.objects.filter(id__lt=article_id).order_by("-id").first()
     next_article = Article.objects.filter(id__gt=article_id).order_by("id").first()
     context = {
