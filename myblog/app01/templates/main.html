@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -558,7 +559,7 @@
         <!-- 个人简介横幅 -->
         <div class="container">
             <div class="profile-banner">
-                <img src="https://via.placeholder.com/120" alt="头像" class="avatar">
+                <img src="{% static 'img/yuhangyuan.jpg' %}" alt="头像" class="avatar">
                 <h1 class="profile-name">张三</h1>
                 <p class="profile-bio">设计师 & 技术写作者</p>
                 <div class="social-icons">
@@ -623,13 +624,13 @@
                     <h3 class="sidebar-title">热门标签</h3>
                     <div class="tag-cloud">
                         <a href="#" class="tag l">JavaScript</a>
-                        <a href="#" class="tag m">CSS</a>
+                        <a href="#" class="tag l">CSS</a>
                         <a href="#" class="tag l">前端开发</a>
-                        <a href="#" class="tag s">Python</a>
-                        <a href="#" class="tag m">设计</a>
-                        <a href="#" class="tag s">阅读</a>
-                        <a href="#" class="tag m">生活方式</a>
-                        <a href="#" class="tag s">旅行</a>
+                        <a href="#" class="tag l">Python</a>
+                        <a href="#" class="tag l">设计</a>
+                        <a href="#" class="tag l">阅读</a>
+                        <a href="#" class="tag l">生活方式</a>
+                        <a href="#" class="tag l">旅行</a>
                         <a href="#" class="tag l">极简主义</a>
                     </div>
                 </div>
@@ -713,7 +714,7 @@
     
     <!-- 微信二维码弹窗 -->
     <div class="qr-modal">
-        <img src="https://via.placeholder.com/200" alt="微信二维码">
+        <img src="{% static 'img/yuhangyuan.jpg' %}" alt="微信二维码">
     </div>
     
     <script>
